@@ -1,6 +1,15 @@
 # eval-desktop
 
-> An desktop app just like jsfiddle but runs offline
+<div align="center">An desktop app like jsfiddle but runs offline</div>
+<p align="center">
+  <img width="" src="https://github.com/codertx/eval-desktop/raw/master/demo.png">
+</p>
+
+#### Features
+
+- [x] Load snippets from JSFiddle
+- [ ] Load snippets from CodePen
+- [ ] Save to gist 
 
 #### Build Setup
 

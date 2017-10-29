@@ -146,4 +146,6 @@ export default {
   letter-spacing: .1em
   opacity: .6
 
+#outPutFrame
+  height: 100%
 </style>
