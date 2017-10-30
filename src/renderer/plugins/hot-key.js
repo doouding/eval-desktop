@@ -1,15 +1,24 @@
 import hotkeys from 'hotkeys-js'
 
 const HotKeysPlugin = {}
-const RegisteredKeys = []
+
+/* Make hot key available on textarea */
+hotkeys.filter = (e) => {
+  let tagName = e.target.tagName
+
+  if (tagName === 'INPUT' || tagName === 'SELECT') {
+    return false
+  } else {
+    return true
+  }
+}
 
 function addHotKeyRegister (Vue) {
   Vue.prototype.$registerHK = function (key, callback) {
-    if (RegisteredKeys.includes(key)) {
-      console.error('Duplicated register key:' + key)
-    } else {
-      hotkeys(key, callback)
-    }
+    hotkeys(key, (e, handler) => {
+      e.preventDefault()
+      callback()
+    })
   }
 }
 

@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 /* use element-ui */
 Vue.use(Element)
 
-/* register hot key plguins */
+/* use hot key plguins */
 Vue.use(HotKey)
 
 /* eslint-disable no-new */

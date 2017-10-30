@@ -19,7 +19,7 @@ export default {
   mounted () {
     window.nav = this
     // register run shortcut
-    this.$registerHK('command + s, ctrl + s', this.compileOutput.bind(this))
+    this.$registerHK('command+s,ctrl+s', this.compileOutput.bind(this))
   },
 
   methods: {
