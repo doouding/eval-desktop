@@ -1,6 +1,6 @@
 # eval-desktop
 
-<div align="center">An desktop app like jsfiddle but runs offline</div>
+<div align="center">A desktop app like jsfiddle runs offline</div>
 <p align="center">
   <img width="" src="https://github.com/codertx/eval-desktop/raw/master/demo.png">
 </p>
