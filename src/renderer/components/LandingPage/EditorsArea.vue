@@ -46,7 +46,7 @@ export default {
     Event.$on('compileOutput', this.compileOutput.bind(this))
 
     // listen fiddle event
-    Event.$on('fiddle', this.updateEditor.bind(this))
+    Event.$on('snippet', this.updateEditor.bind(this))
 
     // create editors
     this.editors.js.el = CodeMirror(document.getElementById('jsEditorWrapper'), {

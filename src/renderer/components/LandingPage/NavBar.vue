@@ -1,12 +1,12 @@
 <script>
 import Event from '@/util/event'
-import JSFiddleFetch from '@/components/LandingPage/JSFiddleFetch'
+import SnippetFetcher from '@/components/LandingPage/SnippetFetcher'
 
 export default {
   name: 'NavBar',
 
   components: {
-    'js-fiddle': JSFiddleFetch
+    SnippetFetcher
   },
 
   data () {
@@ -64,7 +64,7 @@ export default {
 
       <el-col :span="6">
         <el-button size="small">保存至 Gist</el-button>
-        <el-button size="small" @click="showJSFiddle">从 JSFiddle 加载</el-button>
+        <el-button size="small" @click="showJSFiddle">加载 Snippet</el-button>
       </el-col>
 
       <el-col :span="3" style="text-align:right;">
@@ -82,7 +82,7 @@ export default {
 
     </el-row>
 
-    <js-fiddle :visible.sync="fetchJSFiddle"></js-fiddle>
+    <snippet-fetcher :visible.sync="fetchJSFiddle"></snippet-fetcher>
   </div>
 </template>
 
