@@ -28,11 +28,13 @@
     "element-ui": "^2.0.1",
     "he": "^1.1.1",
     "hotkeys-js": "^2.0.4",
+    "less": "^2.7.3",
     "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "request": "^2.83.0",
     "sass-loader": "^6.0.6",
-    "vue": "^2.3.3",
+    "stylus": "^0.54.5",
+    "vue": "^2.5.2",
     "vue-electron": "^1.0.6"
   },
   "devDependencies": {
