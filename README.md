@@ -5,10 +5,14 @@
   <img width="" src="https://github.com/codertx/eval-desktop/raw/master/demo.png">
 </p>
 
-#### Features
+#### Todo Features
 
 - [x] Load snippets from JSFiddle
-- [ ] Load snippets from CodePen
+- [x] Load snippets from CodePen
+- [ ] HTML preprocessor support: Pug, Haml
+- [ ] CSS preprocessor support: Sass, SCSS, LESS, Stylus
+- [ ] JS preprocessor support: TypeScript
+- [ ] Emmet support
 - [ ] Save to gist 
 
 #### Build Setup
