@@ -2,6 +2,7 @@
 import Event from '@/util/event'
 import CodeMirror from '@/util/codemirror'
 import Iframe from '@/util/iframe'
+import CSSPreprocessor from '@/util/css-preprocess'
 
 export default {
   name: 'EditorsArea',
@@ -12,16 +13,19 @@ export default {
         js: {
           show: false,
           width: '',
+          pre: 'JavaScript',
           el: null
         },
         css: {
           show: false,
           width: '',
+          pre: '',
           el: null
         },
         html: {
           show: false,
           width: '',
+          pre: 'HTML',
           el: null
         },
         console: {
@@ -31,6 +35,17 @@ export default {
         output: {
           show: false,
           width: ''
+        }
+      },
+      preprocessors: {
+        'html': {
+          'Pug': null,
+          'Haml': null,
+          'HTML': null
+        },
+        'js': {
+          'TypeScript': null,
+          'JavaScript': null
         }
       },
       output: null
@@ -81,24 +96,43 @@ export default {
       }
     },
 
-    compileOutput () {
-      /* eslint-disable no-useless-escape */
-      let docs = {
-        head: '<style>' + this.editors.css.el.getValue() + '</style>',
-        body: this.editors.html.el.getValue() + '<script>' + this.editors.js.el.getValue() + '<\/script>'
-      }
-      /* eslint-enable no-useless-escape */
+    compileOutput: async function () {
+      try {
+        /* eslint-disable no-useless-escape */
+        let docs = {
+          head: '<style>' +
+            (this.editors.css.pre === ''
+              ? this.editors.css.el.getValue()
+              : await CSSPreprocessor[this.editors.css.pre](this.editors.css.el.getValue())) +
+            '</style>',
+          body: this.editors.html.el.getValue() + '<script>' + this.editors.js.el.getValue() + '<\/script>'
+        }
+        /* eslint-enable no-useless-escape */
 
-      this.output.refreshContent(docs)
+        this.output.refreshContent(docs)
+      } catch (e) {
+        this.$message.error(e.message)
+      }
     },
 
     updateEditor (content) {
       this.editors.js.el.setValue(content.js)
       this.editors.html.el.setValue(content.html)
       this.editors.css.el.setValue(content.css)
+    },
+
+    setPreprocessor (cmd) {
+      let args = cmd.split(' ')
+      console.log(args)
+      this.editors[args[0]].pre = args[1]
+    }
+  },
+
+  computed: {
+    CSSPreprocessor () {
+      return Object.keys(CSSPreprocessor)
     }
   }
-
 }
 </script>
 
@@ -106,13 +140,52 @@ export default {
   <div>
     <el-row type="flex" class="editors-area-wrap">
       <el-col v-show="editors.html.show" :style="{ width: editors.html.width }" class="editors" id="htmlEditorWrapper">
-        <span class="editor-name">HTML</span>
+        <div class="editor-preprocessor">
+          <i class="el-icon-setting"></i>
+          <el-dropdown @command="setPreprocessor">
+            <span class="el-dropdown-link">
+              {{ editors.html.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" trigger="click">
+              <el-dropdown-item 
+                v-for="(value, key) in preprocessors.html"
+                :key="key"
+                :command="'html ' + key">{{ key }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </el-col>
       <el-col v-show="editors.js.show" :style="{ width: editors.js.width }" class="editors" id="jsEditorWrapper"> 
-        <span class="editor-name">JavaScript</span>
+        <div class="editor-preprocessor">
+          <i class="el-icon-setting"></i>
+          <el-dropdown @command="setPreprocessor" trigger="click">
+            <span class="el-dropdown-link">
+              {{ editors.js.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item 
+                v-for="(value, key) in preprocessors.js"
+                :key="key"
+                :command="'js ' + key">{{ key }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </el-col>
       <el-col v-show="editors.css.show" :style="{ width: editors.css.width }" class="editors" id="cssEditorWrapper">
-        <span class="editor-name">CSS</span>
+        <div class="editor-preprocessor">
+          <i class="el-icon-setting"></i>
+          <el-dropdown @command="setPreprocessor" trigger="click">
+            <span class="el-dropdown-link">
+              {{ editors.css.pre === '' ? 'CSS' : editors.css.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" v-once>
+              <el-dropdown-item 
+                v-for="value in CSSPreprocessor"
+                :key="value"
+                :command="'css ' + value">{{ value }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </el-col>
       <el-col v-show="editors.console.show" :style="{ width: editors.console.width }" class="editors">
         <span class="editor-name">Console</span>
@@ -133,6 +206,17 @@ export default {
   border-right: 1px solid #eee
   height: 100%
   position: relative
+  display: flex
+  flex-direction: column
+
+.editor-preprocessor
+  padding: 5px
+  background-color: #F1F1F1
+  border-bottom: 1px solid #E5E5E5
+  display: flex
+  padding-left: 10px
+  align-items: center
+  color: #D1D1D1
 
 .editor-name
   position: absolute
@@ -146,6 +230,20 @@ export default {
   letter-spacing: .1em
   opacity: .6
 
+.el-dropdown-link
+  font-size: 12px
+  padding: 5px
+  padding-left: 1em
+  letter-spacing: .08em
+  display: inline-block
+  cursor: pointer
+
 #outPutFrame
   height: 100%
+</style>
+
+<style lang="sass">
+.editor-preprocessor .el-input__inner
+  background-color: #F1F1F1
+  border: 1px solid #F1F1F1 !important
 </style>
