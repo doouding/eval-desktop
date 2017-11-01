@@ -16,16 +16,16 @@ function parseLess (content) {
 
 function parseSassScss (content, intented) {
   return new Promise((resolve, reject) => {
-    sass.render({
-      data: content,
-      indentedSyntax: intented
-    }, (err, result) => {
-      if (err) {
-        reject(err)
-      }
+    try {
+      let result = sass.renderSync({
+        data: content,
+        indentedSyntax: intented
+      })
 
       resolve(result.css)
-    })
+    } catch (e) {
+      reject(e)
+    }
   })
 }
 
