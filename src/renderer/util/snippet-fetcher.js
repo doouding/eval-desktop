@@ -2,7 +2,7 @@ import request from 'request'
 import cheerio from 'cheerio'
 import he from 'he'
 
-const FetchReg = /^https?:\/\/(jsfiddle\.net|codepen\.io)\/[0-9A-Za-z/]+$/
+const FetchReg = /^https?:\/\/(jsfiddle\.net|codepen\.io)\/[0-9_A-Za-z/]+$/
 
 /**
  * Check given url is valide jsfiddle url
