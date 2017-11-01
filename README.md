@@ -12,6 +12,8 @@
 - [x] HTML preprocessor support: Pug
 - [x] CSS preprocessor support: Sass, SCSS, LESS, Stylus
 - [x] Emmet support for HTML
+- [ ] Common boilerplate support
+- [ ] Hotkey support
 - [ ] Save to gist 
 
 #### Build Setup
