@@ -9,10 +9,9 @@
 
 - [x] Load snippets from JSFiddle
 - [x] Load snippets from CodePen
-- [ ] HTML preprocessor support: Pug, Haml
+- [x] HTML preprocessor support: Pug
 - [x] CSS preprocessor support: Sass, SCSS, LESS, Stylus
-- [ ] JS preprocessor support: TypeScript
-- [ ] Emmet support for HTML
+- [x] Emmet support for HTML
 - [ ] Save to gist 
 
 #### Build Setup
