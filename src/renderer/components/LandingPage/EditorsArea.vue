@@ -19,7 +19,7 @@ export default {
         css: {
           show: false,
           width: '',
-          pre: '',
+          pre: 'CSS',
           el: null
         },
         html: {
@@ -101,9 +101,9 @@ export default {
         /* eslint-disable no-useless-escape */
         let docs = {
           head: '<style>' +
-            (this.editors.css.pre === ''
+            (CSSPreprocessor[this.editors.css.pre].process === null
               ? this.editors.css.el.getValue()
-              : await CSSPreprocessor[this.editors.css.pre](this.editors.css.el.getValue())) +
+              : await CSSPreprocessor[this.editors.css.pre].process(this.editors.css.el.getValue())) +
             '</style>',
           body: this.editors.html.el.getValue() + '<script>' + this.editors.js.el.getValue() + '<\/script>'
         }
@@ -122,9 +122,12 @@ export default {
     },
 
     setPreprocessor (cmd) {
-      let args = cmd.split(' ')
-      console.log(args)
-      this.editors[args[0]].pre = args[1]
+      let [editor, type] = cmd.split(' ')
+
+      this.editors[editor].pre = type
+      this.editors[editor].el.setOption('mode', CSSPreprocessor[type].mode)
+
+      console.log(this.editors[editor].el.getOption('mode'))
     }
   },
 
@@ -176,13 +179,14 @@ export default {
           <i class="el-icon-setting"></i>
           <el-dropdown @command="setPreprocessor" trigger="click">
             <span class="el-dropdown-link">
-              {{ editors.css.pre === '' ? 'CSS' : editors.css.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
+              {{ editors.css.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" v-once>
               <el-dropdown-item 
                 v-for="value in CSSPreprocessor"
                 :key="value"
-                :command="'css ' + value">{{ value }}</el-dropdown-item>
+                :command="'css ' + value">{{ value }}
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

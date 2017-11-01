@@ -14,13 +14,12 @@ function parseLess (content) {
   })
 }
 
-function parseSassScss (content) {
+function parseSassScss (content, intented) {
   return new Promise((resolve, reject) => {
     sass.render({
-      data: content
+      data: content,
+      indentedSyntax: intented
     }, (err, result) => {
-      console.log(err)
-      console.log(result)
       if (err) {
         reject(err)
       }
@@ -43,8 +42,23 @@ function parseStylus (content) {
 }
 
 export default {
-  'SCSS': parseSassScss,
-  'Sass': parseSassScss,
-  'Stylus': parseStylus,
-  'LESS': parseLess
+  'SCSS': {
+    'mode': 'text/x-scss',
+    'process': (content) => { return parseSassScss(content, false) }
+  },
+  'Sass': {
+    'mode': 'text/x-sass',
+    'process': (content) => { return parseSassScss(content, true) }
+  },
+  'Stylus': {
+    'mode': 'text/x-styl',
+    'process': parseStylus
+  },
+  'LESS': {
+    'mode': 'text/x-less',
+    'process': parseLess},
+  'CSS': {
+    'mode': 'text/css',
+    'process': null
+  }
 }
