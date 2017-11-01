@@ -7,6 +7,11 @@ import 'codemirror/mode/css/css'
 import 'codemirror/mode/stylus/stylus'
 import 'codemirror/mode/sass/sass'
 import 'codemirror/mode/htmlmixed/htmlmixed'
+import 'codemirror/mode/pug/pug'
+import emmet from '@emmetio/codemirror-plugin'
+
+/** Register emmet plugin */
+emmet(CodeMirror)
 
 const baseConfig = {
   lineWrapping: true,

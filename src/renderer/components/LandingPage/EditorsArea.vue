@@ -3,6 +3,7 @@ import Event from '@/util/event'
 import CodeMirror from '@/util/codemirror'
 import Iframe from '@/util/iframe'
 import CSSPreprocessor from '@/util/css-preprocess'
+import HTMLPreprocessor from '@/util/html-preprocess'
 
 export default {
   name: 'EditorsArea',
@@ -37,17 +38,6 @@ export default {
           width: ''
         }
       },
-      preprocessors: {
-        'html': {
-          'Pug': null,
-          'Haml': null,
-          'HTML': null
-        },
-        'js': {
-          'TypeScript': null,
-          'JavaScript': null
-        }
-      },
       output: null
     }
   },
@@ -61,7 +51,7 @@ export default {
     Event.$on('compileOutput', this.compileOutput.bind(this))
 
     // listen fiddle event
-    Event.$on('snippet', this.updateEditor.bind(this))
+    Event.$on('snippet', this.updateEditorContent.bind(this))
 
     // create editors
     this.editors.js.el = CodeMirror(document.getElementById('jsEditorWrapper'), {
@@ -80,6 +70,9 @@ export default {
 
     // init output iframe
     this.output = new Iframe(document.getElementById('outPutFrame'))
+
+    // init emmet plugin
+    this.setEmmet()
   },
 
   methods: {
@@ -115,25 +108,50 @@ export default {
       }
     },
 
-    updateEditor (content) {
+    updateEditorContent (content) {
       this.editors.js.el.setValue(content.js)
       this.editors.html.el.setValue(content.html)
       this.editors.css.el.setValue(content.css)
+    },
+
+    setEmmet () {
+      if (this.editors.html.pre === 'HTML') {
+        /** Enable emmet for html */
+        this.editors.html.el.setOption('extraKeys', {
+          'Tab': 'emmetExpandAbbreviation',
+          'Enter': 'emmetInsertLineBreak'
+        })
+      } else {
+        console.log('reset')
+        /** Disable emmet for language other than html */
+        this.editors.html.el.setOption('extraKeys', null)
+      }
     },
 
     setPreprocessor (cmd) {
       let [editor, type] = cmd.split(' ')
 
       this.editors[editor].pre = type
-      this.editors[editor].el.setOption('mode', CSSPreprocessor[type].mode)
 
-      console.log(this.editors[editor].el.getOption('mode'))
+      switch (editor) {
+        case 'css':
+          this.editors[editor].el.setOption('mode', CSSPreprocessor[type].mode)
+          break
+        case 'html':
+          this.editors[editor].el.setOption('mode', HTMLPreprocessor[type].mode)
+          this.setEmmet()
+          break
+      }
     }
   },
 
   computed: {
     CSSPreprocessor () {
       return Object.keys(CSSPreprocessor)
+    },
+
+    HTMLPreprocessor () {
+      return Object.keys(HTMLPreprocessor)
     }
   }
 }
@@ -145,15 +163,15 @@ export default {
       <el-col v-show="editors.html.show" :style="{ width: editors.html.width }" class="editors" id="htmlEditorWrapper">
         <div class="editor-preprocessor">
           <i class="el-icon-setting"></i>
-          <el-dropdown @command="setPreprocessor">
+          <el-dropdown @command="setPreprocessor" trigger="click">
             <span class="el-dropdown-link">
               {{ editors.html.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown" trigger="click">
+            <el-dropdown-menu slot="dropdown" v-once>
               <el-dropdown-item 
-                v-for="(value, key) in preprocessors.html"
-                :key="key"
-                :command="'html ' + key">{{ key }}</el-dropdown-item>
+                v-for="value in HTMLPreprocessor"
+                :key="value"
+                :command="'html ' + value">{{ value }}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -161,17 +179,9 @@ export default {
       <el-col v-show="editors.js.show" :style="{ width: editors.js.width }" class="editors" id="jsEditorWrapper"> 
         <div class="editor-preprocessor">
           <i class="el-icon-setting"></i>
-          <el-dropdown @command="setPreprocessor" trigger="click">
-            <span class="el-dropdown-link">
-              {{ editors.js.pre }}<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item 
-                v-for="(value, key) in preprocessors.js"
-                :key="key"
-                :command="'js ' + key">{{ key }}</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <span class="el-dropdown-link">
+          {{ editors.js.pre }}
+          </span>
         </div>
       </el-col>
       <el-col v-show="editors.css.show" :style="{ width: editors.css.width }" class="editors" id="cssEditorWrapper">
@@ -241,13 +251,8 @@ export default {
   letter-spacing: .08em
   display: inline-block
   cursor: pointer
+  color: #5a5e66
 
 #outPutFrame
   height: 100%
-</style>
-
-<style lang="sass">
-.editor-preprocessor .el-input__inner
-  background-color: #F1F1F1
-  border: 1px solid #F1F1F1 !important
 </style>
