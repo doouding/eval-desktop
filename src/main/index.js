@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Entry of main process
+ */
+
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
