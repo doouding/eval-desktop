@@ -1,3 +1,7 @@
+/**
+ * @fileoverview start webpack-dev-server 
+ */
+
 'use strict'
 
 const chalk = require('chalk')
@@ -38,9 +42,14 @@ function logStats (proc, data) {
   console.log(log)
 }
 
+/**
+ * start webpack dev server and add hot reload support.
+ * This function do the same thing as "webpack-dev-server" cli, 
+ * which means you can access it through browser.
+ */
 function startRenderer () {
   return new Promise((resolve, reject) => {
-    rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
+    rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client-hot-reload')].concat(rendererConfig.entry.renderer)
 
     const compiler = webpack(rendererConfig)
     hotMiddleware = webpackHotMiddleware(compiler, { 
@@ -77,6 +86,9 @@ function startRenderer () {
   })
 }
 
+/**
+ * start main process of electron
+ */
 function startMain () {
   return new Promise((resolve, reject) => {
     mainConfig.entry.main = [path.join(__dirname, '../src/main/index.dev.js')].concat(mainConfig.entry.main)
@@ -113,6 +125,9 @@ function startMain () {
   })
 }
 
+/**
+ * Start electron
+ */
 function startElectron () {
   electronProcess = spawn(electron, ['--inspect=5858', path.join(__dirname, '../dist/electron/main.js')])
 
@@ -128,6 +143,11 @@ function startElectron () {
   })
 }
 
+/**
+ * 
+ * @param {*} data 
+ * @param {*} color 
+ */
 function electronLog (data, color) {
   let log = ''
   data = data.toString().split(/\r?\n/)
@@ -145,6 +165,9 @@ function electronLog (data, color) {
   }
 }
 
+/**
+ * Print greeting message
+ */
 function greeting () {
   const cols = process.stdout.columns
   let text = ''
@@ -163,6 +186,9 @@ function greeting () {
   console.log(chalk.blue('  getting ready...') + '\n')
 }
 
+/**
+ * init
+ */
 function init () {
   greeting()
 

@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Client side hot reload code
+ */
+
 const hotClient = require('webpack-hot-middleware/client?noInfo=true&reload=true')
 
 hotClient.subscribe(event => {
