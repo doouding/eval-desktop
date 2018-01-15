@@ -23,12 +23,12 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "codemirror": "^5.33.0",
     "element-ui": "^2.0.1",
     "he": "^1.1.1",
     "hotkeys-js": "^2.0.4",
     "less": "^2.7.3",
     "lodash": "^4.17.4",
-    "monaco-editor": "0.10.1",
     "node-sass": "^4.5.3",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
