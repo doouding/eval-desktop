@@ -7,14 +7,12 @@
 
 #### Todo Features
 
-- [x] Load snippets from JSFiddle
-- [x] Load snippets from CodePen
 - [x] HTML preprocessor support: Pug
 - [x] CSS preprocessor support: Sass, SCSS, LESS, Stylus
 - [x] Emmet support for HTML
 - [ ] Common boilerplate support
 - [ ] Hotkey support
-- [ ] Save to gist 
+- [ ] Online edition
 
 #### Build Setup
 
@@ -35,5 +33,3 @@ npm run lint
 ```
 
 ---
-
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[de85f81](https://github.com/SimulatedGREG/electron-vue/tree/de85f81890c01500113738bfe57bef136f9fbf52) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
