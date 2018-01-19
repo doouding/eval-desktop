@@ -44,7 +44,10 @@ export default {
   props: {
     lang: {
       type: String,
-      required: true
+      required: true,
+      validator (val) {
+        return LANG_MODE_MAP.hasOwnProperty(val)
+      }
     },
     value: {
       type: String,
@@ -66,6 +69,9 @@ export default {
   methods: {
     updateValue (newVal) {
       this.$emit('input', newVal)
+    },
+    compile () {
+      
     }
   }
 }
