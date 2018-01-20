@@ -49,6 +49,13 @@ let rendererConfig = {
         })
       },
       {
+        test: /\.sass$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
+      },
+      {
         test: /\.html$/,
         use: 'vue-html-loader'
       },
@@ -134,7 +141,8 @@ let rendererConfig = {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js',
-      'codemirror$': 'codemirror/lib/codemirror.js'
+      'codemirror$': 'codemirror/lib/codemirror.js',
+      'style-variable': path.join(__dirname, '../src/renderer/assets/styles/variable.sass')
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
   },
