@@ -1,17 +1,27 @@
-import CodeMirror from 'codemirror/lib/codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/3024-day'
 import 'codemirror/addon/display/autorefresh'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/css/css'
-import 'codemirror/mode/stylus/stylus'
-import 'codemirror/mode/sass/sass'
-import 'codemirror/mode/htmlmixed/htmlmixed'
-import 'codemirror/mode/pug/pug'
+import CodeMirror from 'codemirror'
 import emmet from '@emmetio/codemirror-plugin'
+import javascript from './javascript'
+import css from './css'
+import xml from './xml'
+import html from './html'
+import sass from './sass'
+import pug from './pug'
 
 /** Register emmet plugin */
 emmet(CodeMirror)
+
+/** Register highlight */
+javascript(CodeMirror)
+css(CodeMirror)
+xml(CodeMirror)
+html(CodeMirror)
+sass(CodeMirror)
+pug(CodeMirror)
+
+console.log(CodeMirror.mimeModes)
 
 const baseConfig = {
   lineWrapping: true,

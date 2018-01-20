@@ -4,7 +4,11 @@
 </template>
 
 <script>
+/** 
+ * @fileoverview Editor component is responsible for writing code, compile code and syntax error prompt
+ */
 import CodeMirror from '@/util/codemirror'
+import preprocessor from '@/util/preprocess'
 
 const LANG_MODE_MAP = {
   // css
@@ -12,7 +16,6 @@ const LANG_MODE_MAP = {
   'less': 'text/x-less',
   'scss': 'text/x-scss',
   'sass': 'text/x-sass',
-  'stylus': 'text/x-styl',
 
   // html
   'html': 'text/html',
@@ -24,14 +27,10 @@ const LANG_MODE_MAP = {
 export default {
   name: 'CodeMirror',
 
-  beforeMount () {
+  mounted () {
+    console.log(LANG_MODE_MAP[this.lang.toLowerCase()])
     this.editor = CodeMirror(this.$el, {
-      value: this.value,
       mode: LANG_MODE_MAP[this.lang.toLowerCase()]
-    })
-
-    this.editor.on('change', (editor) => {
-      this.updateValue(editor.getValue())
     })
   },
 
@@ -48,18 +47,10 @@ export default {
       validator (val) {
         return LANG_MODE_MAP.hasOwnProperty(val)
       }
-    },
-    value: {
-      type: String,
-      required: true
     }
   },
 
   watch: {
-    value (newVal) {
-      this.editor.doc.setValue(newVal)
-    },
-
     lang (newVal) {
       this.editor.setOption('mode', newVal)
       this.editor.doc.setValue('')
@@ -67,11 +58,14 @@ export default {
   },
 
   methods: {
-    updateValue (newVal) {
-      this.$emit('input', newVal)
-    },
     compile () {
-      
+      return new Promise((resolve, reject) => {
+        preprocessor[this.lang](this.value)
+          .then(resolve)
+          .catch((err) => {
+            reject(err)
+          })
+      })
     }
   }
 }
