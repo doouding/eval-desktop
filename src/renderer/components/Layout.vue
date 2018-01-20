@@ -4,21 +4,21 @@
       <top-bar></top-bar>
     </div>
     <div class="main-wrapper">
-      <editors-layout>
-        <code-mirror :slot="htmlEditorSlot"></code-mirror>
-        <code-mirror :slot="jsEditorSlot"></code-mirror>
-        <code-mirror :slot="cssEditorSlot"></code-mirror>
-        <output-frame></output-frame>
+      <editors-layout :layout="layout">
+        <code-mirror :slot="htmlEditorSlot" :lang="editors.html"></code-mirror>
+        <code-mirror :slot="jsEditorSlot" :lang="editors.js"></code-mirror>
+        <code-mirror :slot="cssEditorSlot" :lang="editors.css"></code-mirror>
+        <output-frame slot="normal-output"></output-frame>
       </editors-layout>
     </div>
   </div>
 </template>
 
 <script>
-import EditorsLayout from '../main/EditorsLayout'
-import TopBar from '../main/Topbar'
-import CodeMirror from '../common/CodeMirror'
-import OutputFrame from '../common/OutputFrame'
+import EditorsLayout from './main/EditorsLayout'
+import TopBar from './main/Topbar'
+import CodeMirror from './common/CodeMirror'
+import OutputFrame from './common/OutputFrame'
 
 export default {
   components: {
@@ -31,7 +31,9 @@ export default {
     return {
       layout: 'normal',
       editors: {
-        lang: 'js'
+        js: 'javascript',
+        css: 'css',
+        html: 'html'
       }
     }
   },

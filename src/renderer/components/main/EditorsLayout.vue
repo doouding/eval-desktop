@@ -1,21 +1,21 @@
 <template>
   <div :class="[layout]" class="editor-layout">
     <template v-if="layout === 'normal'">
-      <div class="left">
+      <div class="left" style="width: calc(50% - 0.5px)">
         <div>
           <slot name="normal-html"></slot>
         </div>
-        <div class="gutter" @keypress=""></div>
+        <div class="gutter"></div>
         <div>
           <slot name="normal-js"></slot>
         </div>
       </div>
-      <div class="gutter" @keypress=""></div>
-      <div class="right">
+      <div class="gutter" style="width: 1px"></div>
+      <div class="right" style="width: calc(50% - 0.5px)">
         <div>
           <slot name="normal-css"></slot>
         </div>
-        <div class="gutter" @keypress=""></div>
+        <div class="gutter"></div>
         <div>
           <slot name="normal-output"></slot>
         </div>
@@ -38,7 +38,26 @@
         <slot name="columns-output"></slot>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="layout === 'bottom'">
+      <div>
+        <div>
+          <slot name="aside-html"></slot>
+        </div>
+        <div class="gutter"></div>
+        <div>
+          <slot name="aside-js"></slot>
+        </div>
+        <div class="gutter"></div>
+        <div>
+          <slot name="aside-css"></slot>
+        </div>
+      </div>
+      <div class="gutter"></div>
+      <div>
+        <slot name="aside-output"></slot>
+      </div>
+    </template>
+    <template v-else-if="layout === 'right'">
       <div>
         <div>
           <slot name="aside-html"></slot>
@@ -66,11 +85,16 @@
  */
 export default {
   data () {
-    return {}
+    return {
+      normal: {
+
+      }
+    }
   },
   props: {
     layout: {
       type: String,
+      required: true,
       validator (val) {
         return ['normal', 'columns', 'aside', 'bottom'].includes(val)
       }
@@ -89,6 +113,7 @@ export default {
 .gutter
   width: 1px
   cursor: col-resize
+  background-color: #e8e8e8
 
 .normal
   flex-direction: row

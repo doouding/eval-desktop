@@ -1,3 +1,4 @@
+import '@/assets/styles/index.sass'
 import Vue from 'vue'
 import HotKey from '@/plugins/hot-key'
 import Element from '@/plugins/element-ui'

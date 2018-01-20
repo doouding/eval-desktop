@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  beforeMount () {
+  mounted () {
     this.iframe = this.$el.querySelector('iframe[name="output"]')
   },
 
@@ -38,7 +38,7 @@ export default {
      */
     integrateHTML (html, js, css, libs) {
       /* eslint-disable */
-      var libScripts = libs.map(l => `<script src="${l.link}"></script>`).join('')
+      var libScripts = libs.map(l => '<script src="' + l.link + '><\/script>').join('')
 
       return `<DOCTYPE html>\
         <html>
@@ -52,7 +52,7 @@ export default {
           </head>
           <body>
           ${html}
-          <script>${js}</script>
+          <script>${js}<\/script>
           </body>
         </html>`
       /* eslint-enable */

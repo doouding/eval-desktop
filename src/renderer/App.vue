@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <landing-page></landing-page>
+    <layout></layout>
   </div>
 </template>
 
 <script>
-  import LandingPage from '@/components/LandingPage'
+  import Layout from '@/components/Layout'
 
   export default {
     name: 'eval-desktop',
     components: {
-      LandingPage
+      Layout
     }
   }
 </script>
@@ -24,12 +24,4 @@ body, html
   margin: 0
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   height: 100%
-
-.CodeMirror
-  height: 100%
-
-.CodeMirror-wrap pre
-  word-wrap: break-word
-  white-space: pre-wrap
-  word-break: break-word
 </style>
