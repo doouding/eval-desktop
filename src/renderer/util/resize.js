@@ -8,12 +8,12 @@
  * @param {MouseEvent} event event object, used to get cursor position
  * @return {Object} contain x,y
  */
-export function mouseOfEl (el, event) {
+function mouse (el, event) {
   let rect = el.getBoundingClientRect()
 
   return {
-    x: event.clientX - rect.x,
-    y: event.clientY - rect.y
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
   }
 }
 
@@ -22,7 +22,7 @@ export function mouseOfEl (el, event) {
  * @param {HTMLElement} el 
  * @return {Object} contain width and height
  */
-export function size (el) {
+function size (el) {
   return {
     width: el.offsetWidth,
     height: el.offsetHeight
@@ -30,11 +30,22 @@ export function size (el) {
 }
 
 /**
- * Get element position of relative element. if the second param is not given,
- * It will use offsetParent instead
- * @param {HTMLElement} el target element
- * @param {HTMLElement} rEl relative element
+ * Add event listener for mousemove event
+ * @param {*} el 
+ * @param {*} callback 
  */
-export function elOfEl (el, rEl = null) {
-  
+function move (el, callback) {
+  let unregister = () => {
+    el.removeEventListener('mousemove', callback, false)
+    window.removeEventListener('mouseup', unregister, false)
+  }
+
+  el.addEventListener('mousemove', callback, false)
+  window.addEventListener('mouseup', unregister, false)
+}
+
+export default {
+  move,
+  mouse,
+  size
 }

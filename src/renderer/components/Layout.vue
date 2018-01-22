@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-layout">
     <div class="nav-wrapper">
       <top-bar></top-bar>
     </div>
@@ -47,7 +47,11 @@ export default {
 </script>
 
 <style lang="sass">
-.editors-wrapper
+.main-layout
   display: flex
+  height: 100%
+  flex-direction: column
 
+.main-wrapper
+  height: calc(100% - 54px)
 </style>

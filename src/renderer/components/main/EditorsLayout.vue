@@ -1,22 +1,22 @@
 <template>
-  <div :class="[layout]" class="editor-layout">
+  <div :class="[layout]" class="editor-layout" ref="main">
     <template v-if="layout === 'normal'">
-      <div class="left" style="width: calc(50% - 0.5px)">
-        <div>
+      <div ref="normalLeftArea" class="left" :style="normalGutter.left">
+        <div class="editor-wrapper" :style="normalGutter.leftArea.top">
           <slot name="normal-html"></slot>
         </div>
-        <div class="gutter"></div>
-        <div>
+        <div class="gutter vertical" @mousedown="normalResize('LeftArea')"></div>
+        <div class="editor-wrapper" :style="normalGutter.leftArea.bottom">
           <slot name="normal-js"></slot>
         </div>
       </div>
-      <div class="gutter" style="width: 1px"></div>
-      <div class="right" style="width: calc(50% - 0.5px)">
-        <div>
+      <div class="gutter horizontal" @mousedown="normalResize('Main')"></div>
+      <div ref="normalRightArea" class="right" :style="normalGutter.right">
+        <div class="editor-wrapper" :style="normalGutter.rightArea.top">
           <slot name="normal-css"></slot>
         </div>
-        <div class="gutter"></div>
-        <div>
+        <div class="gutter vertical" @mousedown="normalResize('RightArea')"></div>
+        <div class="container-wrapper" :style="normalGutter.rightArea.bottom">
           <slot name="normal-output"></slot>
         </div>
       </div>
@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import resize from '@/util/resize'
+
 /**
  * layout has three type: columns, normal, result-bottom, result-right
  */
@@ -87,7 +89,44 @@ export default {
   data () {
     return {
       normal: {
-
+        left: 50,
+        right: 50,
+        leftArea: {
+          top: 50,
+          bottom: 50
+        },
+        rightArea: {
+          top: 50,
+          bottom: 50
+        }
+      }
+    }
+  },
+  computed: {
+    normalGutter () {
+      return {
+        left: {
+          width: `calc(${this.normal.left}% - 0.5px)`
+        },
+        right: {
+          width: `calc(${this.normal.right}% - 0.5px)`
+        },
+        leftArea: {
+          top: {
+            height: `calc(${this.normal.leftArea.top}% - 0.5px)`
+          },
+          bottom: {
+            height: `calc(${this.normal.leftArea.bottom}% - 0.5px)`
+          }
+        },
+        rightArea: {
+          top: {
+            height: `calc(${this.normal.rightArea.top}% - 0.5px)`
+          },
+          bottom: {
+            height: `calc(${this.normal.rightArea.bottom}% - 0.5px)`
+          }
+        }
       }
     }
   },
@@ -101,7 +140,28 @@ export default {
     }
   },
   methods: {
+    normalResize (gutter) {
+      let relativeEl = this.$refs['normal' + gutter] || this.$refs.main
 
+      resize.move(relativeEl, (e) => {
+        let size = resize.size(relativeEl)
+        let pos = resize.mouse(relativeEl, e)
+
+        switch (gutter) {
+          case 'Main':
+            this.normal.left = pos.x / size.width * 100
+            this.normal.right = (size.width - pos.x) / size.width * 100
+            break
+          case 'LeftArea':
+            this.normal.leftArea.top = pos.y / size.height * 100
+            this.normal.leftArea.bottom = (size.width - pos.y) / size.height * 100
+            break
+          case 'RightArea':
+            this.normal.rightArea.top = pos.y / size.height * 100
+            this.normal.rightArea.bottom = (size.width - pos.y) / size.height * 100
+        }
+      })
+    }
   }
 }
 </script>
@@ -109,34 +169,43 @@ export default {
 <style lang="sass" scoped>
 .editor-layout
   display: flex
+  height: 100%
 
 .gutter
+  background-color: #e8e8e8
+  &::after
+    content: ''
+    position: absolute
+    display: block
+    z-index: 11
+
+.gutter.horizontal
   width: 1px
   cursor: col-resize
-  background-color: #e8e8e8
+  position: relative
+  &::after
+    width: 8px
+    height: 100%
+    left: -3px
+
+.gutter.vertical
+  height: 1px
+  width: 100%
+  cursor: row-resize
+  position: relative
+  &::after
+    height: 8px
+    width: 100%
+    top: -3px
 
 .normal
   flex-direction: row
   align-items: stretch
   > .left,
   > .right
+    height: 100%
     > .gutter
       height: 1px
       width: 100%
-
-.columns
-  flex-direction: row
-  align-item: stretch
-
-.aside
-  flex-direction: row
-  align-item: stretch
-
-.bottom
-  flex-direction: column
-  & > .gutter
-    height: 1px
-    width: 100%
-    cursor: row-resize
 
 </style>

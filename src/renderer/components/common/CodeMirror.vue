@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="codemirror-component">
     <div class="editor-bar">
       <el-dropdown @command="changeLang" trigger="click">
         <span class="el-dropdown-link">
@@ -10,9 +10,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div class="editor-wrap">
-
-    </div>
+    <div class="editor-wrap"></div>
   </div>
 </template>
 
@@ -98,6 +96,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.codemirror-component
+  height: 100%
+  position: relative
+
 .editor-bar
   padding: .5em 1.2em
   background-color: #f7f7f7
@@ -109,4 +111,14 @@ export default {
     user-select: none
     font-size: 13px
     letter-spacing: .15em
+</style>
+
+<style lang="sass">
+.editor-wrap
+  position: absolute
+  top: 34px
+  bottom: 0
+  width: 100%
+  > .CodeMirror
+    height: 100%
 </style>
