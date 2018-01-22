@@ -64,7 +64,8 @@ export default {
   data () {
     return {
       current: '',
-      langs: null
+      langs: null,
+      editor: null
     }
   },
 
@@ -89,7 +90,10 @@ export default {
       })
     },
     changeLang (lang) {
-      this.current = lang
+      if (this.current !== lang) {
+        this.editor.setOption('mode', this.langs[lang])
+        this.current = lang
+      }
     }
   }
 }

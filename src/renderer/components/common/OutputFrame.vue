@@ -5,8 +5,9 @@
 -->
 
 <template>
-  <div style="width:100%; height:100%">
-    <iframe
+  <div class="iframe-wrapper" style="width:100%; height:100%">
+    <div v-show="cover" class="iframe-alter"></div>
+    <iframe class="iframe"
       name="output"
       frameborder="0"
       sandbox="allow-forms allow-modals allow-pointer-lock allow-scripts allow-popups allow-same-origin">
@@ -18,11 +19,24 @@
 export default {
   mounted () {
     this.iframe = this.$el.querySelector('iframe[name="output"]')
+
+    /** 
+     * mousemove event listener not working on iframe element
+     * so we put a "cover element" to cover iframe so that 
+     * mousemove event listener can run successfully
+     **/
+    window.addEventListener('mousedown', () => {
+      this.cover = true
+    }, false)
+    window.addEventListener('mouseup', () => {
+      this.cover = false
+    }, false)
   },
 
   data () {
     return {
-      iframe: null
+      iframe: null,
+      cover: false
     }
   },
 
@@ -60,3 +74,23 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.iframe-wrapper
+  position: relative
+
+.iframe-alter
+  width: 100%
+  height: 100%
+  position: absolute
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  background-color: rgba(0,0,0,0)
+
+.iframe
+  width: 100%
+  height: 100%
+
+</style>
