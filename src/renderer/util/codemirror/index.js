@@ -1,8 +1,8 @@
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/3024-day'
 import 'codemirror/addon/display/autorefresh'
-import CodeMirror from 'codemirror'
 import emmet from '@emmetio/codemirror-plugin'
+import CodeMirror from 'codemirror'
 import javascript from './javascript'
 import css from './css'
 import xml from './xml'
@@ -20,8 +20,6 @@ xml(CodeMirror)
 html(CodeMirror)
 sass(CodeMirror)
 pug(CodeMirror)
-
-console.log(CodeMirror.mimeModes)
 
 const baseConfig = {
   lineWrapping: true,

@@ -24,14 +24,24 @@ const LANG_MODE_MAP = {
   'javascript': 'text/javascript'
 }
 
+const EMMET_ENABLE = ['html']
+
 export default {
   name: 'CodeMirror',
 
   mounted () {
-    console.log(LANG_MODE_MAP[this.lang.toLowerCase()])
-    this.editor = CodeMirror(this.$el, {
+    let options = {
       mode: LANG_MODE_MAP[this.lang.toLowerCase()]
-    })
+    }
+
+    if (EMMET_ENABLE.includes(this.lang)) {
+      options.extraKeys = {
+        'Tab': 'emmetExpandAbbreviation',
+        'Enter': 'emmetInsertLineBreak'
+      }
+    }
+
+    this.editor = CodeMirror(this.$el, options)
   },
 
   data () {
