@@ -110,6 +110,7 @@ export default {
 
 .layout-dropdown-link
   color: $theme-color
+  cursor: pointer
 
 .layout-item
   font-size: 20px

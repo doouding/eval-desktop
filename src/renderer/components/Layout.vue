@@ -5,9 +5,9 @@
     </div>
     <div class="main-wrapper">
       <editors-layout :layout="layout">
-        <code-mirror :slot="htmlEditorSlot" :lang="editors.html"></code-mirror>
-        <code-mirror :slot="jsEditorSlot" :lang="editors.js"></code-mirror>
-        <code-mirror :slot="cssEditorSlot" :lang="editors.css"></code-mirror>
+        <code-mirror :slot="htmlEditorSlot" lang="HTML"></code-mirror>
+        <code-mirror :slot="jsEditorSlot" lang="JavaScript"></code-mirror>
+        <code-mirror :slot="cssEditorSlot" lang="CSS"></code-mirror>
         <output-frame slot="normal-output"></output-frame>
       </editors-layout>
     </div>
@@ -29,12 +29,7 @@ export default {
   },
   data () {
     return {
-      layout: 'normal',
-      editors: {
-        js: 'javascript',
-        css: 'css',
-        html: 'html'
-      }
+      layout: 'normal'
     }
   },
   computed: {

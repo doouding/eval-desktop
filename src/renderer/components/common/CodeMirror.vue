@@ -1,5 +1,18 @@
 <template>
   <div>
+    <div class="editor-bar">
+      <el-dropdown @command="changeLang" trigger="click">
+        <span class="el-dropdown-link">
+          {{current}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="(value, key) in langs" :key="value" :command="key">{{key}}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    <div class="editor-wrap">
+
+    </div>
   </div>
 </template>
 
@@ -11,17 +24,20 @@ import CodeMirror from '@/util/codemirror'
 import preprocessor from '@/util/preprocess'
 
 const LANG_MODE_MAP = {
-  // css
-  'css': 'text/css',
-  'less': 'text/x-less',
-  'scss': 'text/x-scss',
-  'sass': 'text/x-sass',
+  'CSS': {
+    'CSS': 'text/css',
+    'Less': 'text/x-less',
+    'Scss': 'text/x-scss',
+    'Sass': 'text/x-sass'
+  },
 
-  // html
-  'html': 'text/html',
+  'HTML': {
+    'HTML': 'text/html'
+  },
 
-  // javascript
-  'javascript': 'text/javascript'
+  'JavaScript': {
+    'JavaScript': 'text/javascript'
+  }
 }
 
 const EMMET_ENABLE = ['html']
@@ -31,7 +47,7 @@ export default {
 
   mounted () {
     let options = {
-      mode: LANG_MODE_MAP[this.lang.toLowerCase()]
+      mode: LANG_MODE_MAP[this.lang][this.lang]
     }
 
     if (EMMET_ENABLE.includes(this.lang)) {
@@ -41,12 +57,16 @@ export default {
       }
     }
 
-    this.editor = CodeMirror(this.$el, options)
+    this.editor = CodeMirror(this.$el.querySelector('.editor-wrap'), options)
+    // set default language
+    this.current = this.lang
+    this.langs = LANG_MODE_MAP[this.lang]
   },
 
   data () {
     return {
-      editor: null
+      current: '',
+      langs: null
     }
   },
 
@@ -60,13 +80,6 @@ export default {
     }
   },
 
-  watch: {
-    lang (newVal) {
-      this.editor.setOption('mode', newVal)
-      this.editor.doc.setValue('')
-    }
-  },
-
   methods: {
     compile () {
       return new Promise((resolve, reject) => {
@@ -76,7 +89,24 @@ export default {
             reject(err)
           })
       })
+    },
+    changeLang (lang) {
+      this.current = lang
     }
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.editor-bar
+  padding: .5em 1.2em
+  background-color: #f7f7f7
+  .el-dropdown-link
+    font-family: 'Ubuntu'
+    cursor: pointer
+    outline: none
+    color: #777
+    user-select: none
+    font-size: 13px
+    letter-spacing: .15em
+</style>
