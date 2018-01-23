@@ -5,14 +5,16 @@
       "presets": [
         ["env", {
           "targets": { "node": 7 }
-        }]
+        }],
+        "stage-3"
       ]
     },
     "renderer": {
       "presets": [
         ["env", {
           "modules": false
-        }]
+        }],
+        "stage-3"
       ]
     },
     "web": {
@@ -29,7 +31,8 @@
             ]
           },
           "modules": false
-        }]
+        }],
+        "stage-3"
       ]
     }
   },
