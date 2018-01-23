@@ -20,9 +20,9 @@ export default {
   mounted () {
     this.iframe = this.$el.querySelector('iframe[name="output"]')
 
-    /** 
+    /**
      * mousemove event listener not working on iframe element
-     * so we put a "cover element" to cover iframe so that 
+     * so we put a "cover element" to cover iframe so that
      * mousemove event listener can run successfully
      **/
     window.addEventListener('mousedown', () => {
