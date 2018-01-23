@@ -95,6 +95,10 @@ export default {
         this.current = lang
       }
     }
+  },
+
+  destroyed () {
+    console.log('destroyed')
   }
 }
 </script>

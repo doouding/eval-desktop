@@ -29,7 +29,7 @@ export default {
   },
   data () {
     return {
-      layout: 'columns'
+      layout: 'bottom'
     }
   },
   computed: {

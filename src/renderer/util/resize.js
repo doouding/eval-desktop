@@ -35,12 +35,18 @@ function size (el) {
  * @param {*} callback 
  */
 function move (el, callback) {
+  let moveHander = (e) => {
+    let elSize = size(el)
+    let pos = mouse(el, e)
+    callback(e, elSize, pos)
+  }
+
   let unregister = () => {
-    el.removeEventListener('mousemove', callback, false)
+    el.removeEventListener('mousemove', moveHander, false)
     window.removeEventListener('mouseup', unregister, false)
   }
 
-  el.addEventListener('mousemove', callback, false)
+  el.addEventListener('mousemove', moveHander, false)
   window.addEventListener('mouseup', unregister, false)
 }
 

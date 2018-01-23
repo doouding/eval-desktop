@@ -39,41 +39,41 @@
       </div>
     </template>
     <template v-else-if="layout === 'bottom'">
-      <div>
-        <div>
-          <slot name="aside-html"></slot>
+      <div ref="bottomTopArea" :style="bottomGutter.top" class="top">
+        <div :style="bottomGutter.topArea.col1">
+          <slot name="bottom-html"></slot>
         </div>
-        <div class="gutter"></div>
-        <div>
-          <slot name="aside-js"></slot>
+        <div class="gutter horizontal" @mousedown="bottomResize('TopFirst')"></div>
+        <div :style="bottomGutter.topArea.col2">
+          <slot name="bottom-js"></slot>
         </div>
-        <div class="gutter"></div>
-        <div>
-          <slot name="aside-css"></slot>
+        <div class="gutter horizontal" @mousedown="bottomResize('TopSecond')"></div>
+        <div :style="bottomGutter.topArea.col3">
+          <slot name="bottom-css"></slot>
         </div>
       </div>
-      <div class="gutter"></div>
-      <div>
+      <div class="gutter vertical" @mousedown="bottomResize('Main')"></div>
+      <div :style="bottomGutter.bottom" class="bottom">
         <slot name="aside-output"></slot>
       </div>
     </template>
     <template v-else-if="layout === 'right'">
-      <div>
-        <div>
-          <slot name="aside-html"></slot>
+      <div ref="righLeftArea" :style="rightGutter.left">
+        <div class="left" :style="rightGutter.leftArea.row1">
+          <slot name="right-html"></slot>
         </div>
-        <div class="gutter"></div>
-        <div>
-          <slot name="aside-js"></slot>
+        <div class="gutter vertical" @mousedown="rightResize('leftAreaFirst')"></div>
+        <div :style="rightGutter.leftArea.row2">
+          <slot name="right-js"></slot>
         </div>
-        <div class="gutter"></div>
-        <div>
-          <slot name="aside-css"></slot>
+        <div class="gutter vertical" @mousedown="rightResize('leftAreaSecond')"></div>
+        <div :style="rightGutter.leftArea.row3">
+          <slot name="right-css"></slot>
         </div>
       </div>
-      <div class="gutter"></div>
-      <div>
-        <slot name="aside-output"></slot>
+      <div class="gutter horizontal" @mousedown="rightResize('Main')"></div>
+      <div :style="rightGutter.right">
+        <slot name="right-output"></slot>
       </div>
     </template>
   </div>
@@ -105,6 +105,24 @@ export default {
         col2: 25,
         col3: 25,
         col4: 25
+      },
+      bottom: {
+        top: 50,
+        bottom: 50,
+        topArea: {
+          col1: 33.33,
+          col2: 33.33,
+          col3: 33.34
+        }
+      },
+      right: {
+        left: 50,
+        right: 50,
+        leftArea: {
+          row1: 33.33,
+          row2: 33.33,
+          row3: 33.34
+        }
       }
     }
   },
@@ -150,6 +168,48 @@ export default {
           width: `calc(${this.columns.col4}% - 1px)`
         }
       }
+    },
+    bottomGutter () {
+      return {
+        top: {
+          height: `calc(${this.bottom.top}% - 0.5px)`
+        },
+        bottom: {
+          height: `calc(${this.bottom.bottom}% - 0.5px)`
+        },
+        topArea: {
+          col1: {
+            width: `calc(${this.bottom.topArea.col1}% - 0.5px)`
+          },
+          col2: {
+            width: `calc(${this.bottom.topArea.col2}% - 0.5px)`
+          },
+          col3: {
+            width: `calc(${this.bottom.topArea.col3}% - 1px)`
+          }
+        }
+      }
+    },
+    rightGutter () {
+      return {
+        left: {
+          width: `calc(${this.right.left}% - 0.5px)`
+        },
+        right: {
+          width: `calc(${this.right.right}% - 0.5px)`
+        },
+        leftArea: {
+          row1: {
+            height: `calc(${this.right.leftArea.row1}% - 0.5px)`
+          },
+          row2: {
+            height: `calc(${this.right.leftArea.row2}% - 0.5px)`
+          },
+          row3: {
+            height: `calc(${this.right.leftArea.row3}% - 1px)`
+          }
+        }
+      }
     }
   },
   props: {
@@ -157,7 +217,7 @@ export default {
       type: String,
       required: true,
       validator (val) {
-        return ['normal', 'columns', 'aside', 'bottom'].includes(val)
+        return ['normal', 'columns', 'right', 'bottom'].includes(val)
       }
     }
   },
@@ -165,10 +225,7 @@ export default {
     normalResize (gutter) {
       let relativeEl = this.$refs['normal' + gutter] || this.$refs.main
 
-      resize.move(relativeEl, (e) => {
-        let size = resize.size(relativeEl)
-        let pos = resize.mouse(relativeEl, e)
-
+      resize.move(relativeEl, (e, size, pos) => {
         switch (gutter) {
           case 'Main':
             this.normal.left = pos.x / size.width * 100
@@ -187,10 +244,7 @@ export default {
     columnsResize (gutter) {
       let relativeEl = this.$refs.main
 
-      resize.move(relativeEl, (e) => {
-        let size = resize.size(relativeEl)
-        let pos = resize.mouse(relativeEl, e)
-
+      resize.move(relativeEl, (e, size, pos) => {
         switch (gutter) {
           case 'First':
             this.columns.col1 = pos.x / size.width * 100
@@ -203,6 +257,56 @@ export default {
           case 'Third':
             this.columns.col3 = pos.x / size.width * 100 - this.columns.col1 - this.columns.col2
             this.columns.col4 = 100 - this.columns.col1 - this.columns.col2 - this.columns.col3
+        }
+      })
+    },
+    bottomResize (gutter) {
+      let relativeEl
+      if (gutter === 'Main') {
+        relativeEl = this.$refs.main
+      } else {
+        relativeEl = this.$refs.bottomTopArea
+      }
+
+      resize.move(relativeEl, (e, size, pos) => {
+        switch (gutter) {
+          case 'Main':
+            this.bottom.top = pos.y / size.height * 100
+            this.bottom.bottom = 100 - this.bottom.top
+            break
+          case 'TopFirst':
+            this.bottom.topArea.col1 = pos.x / size.width * 100
+            this.bottom.topArea.col2 = 100 - this.bottom.topArea.col1 - this.bottom.topArea.col3
+            break
+          case 'TopSecond':
+            this.bottom.topArea.col2 = pos.x / size.width * 100 - this.bottom.topArea.col1
+            this.bottom.topArea.col3 = 100 - this.bottom.topArea.col1 - this.bottom.topArea.col2
+            break
+        }
+      })
+    },
+    rightResize (gutter) {
+      let relativeEl
+      if (gutter === 'Main') {
+        relativeEl = this.$refs.main
+      } else {
+        relativeEl = this.$refs.righLeftArea
+      }
+
+      resize.move(relativeEl, (e, size, pos) => {
+        switch (gutter) {
+          case 'Main':
+            this.right.left = pos.x / size.width * 100
+            this.right.right = (size.width - pos.x) / size.width * 100
+            break
+          case 'leftAreaFirst':
+            this.right.leftArea.row1 = pos.y / size.height * 100
+            this.right.leftArea.row2 = 100 - this.right.leftArea.row1 - this.right.leftArea.row3
+            break
+          case 'leftAreaSecond':
+            this.right.leftArea.row2 = pos.y / size.height * 100 - this.right.leftArea.row1
+            this.right.leftArea.row3 = 100 - this.right.leftArea.row1 - this.right.leftArea.row2
+            break
         }
       })
     }
@@ -255,4 +359,19 @@ export default {
 .columns
   flex-direction: row
   align-items: stretch
+
+.bottom
+  flex-direction: column
+  align-items: stretch
+  > .top
+    display: flex
+    align-items: stretch
+
+.right
+  flex-direction: row
+  align-items: stretch
+  > .left
+    display: flex
+    flex-direction: column
+    align-items: stretch
 </style>
