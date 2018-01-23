@@ -1,7 +1,7 @@
 <template>
   <div class="main-layout">
     <div class="nav-wrapper">
-      <top-bar></top-bar>
+      <top-bar @layout-change="layoutChange"></top-bar>
     </div>
     <div class="main-wrapper">
       <editors-layout :layout="layout">
@@ -29,7 +29,7 @@ export default {
   },
   data () {
     return {
-      layout: 'normal'
+      layout: 'columns'
     }
   },
   computed: {
@@ -41,6 +41,11 @@ export default {
     },
     cssEditorSlot () {
       return this.layout + '-css'
+    }
+  },
+  methods: {
+    layoutChange (layout) {
+      this.layout = layout
     }
   }
 }

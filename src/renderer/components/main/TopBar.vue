@@ -21,22 +21,22 @@
               <i class="eval-icon fullscreen"></i>
             </span>
           </el-button>
-          <el-dropdown class="layout-action" trigger="click">
+          <el-dropdown class="layout-action" @command="switchLayout" trigger="click">
             <span class="layout-dropdown-link">
               <i class="eval-icon layout" style="font-size: 1.1em"></i>
             </span>
-            <el-dropdown-menu slot="dropdown" @command="switchLayout">
+            <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="normal">
                 <span class="layout-item">
                   <i class="eval-icon normal"></i>
                 </span>
               </el-dropdown-item>
-              <el-dropdown-item command="result-bottom">
+              <el-dropdown-item command="bottom">
                 <span class="layout-item">
                   <i class="eval-icon result-bottom"></i>
                 </span>
               </el-dropdown-item>
-              <el-dropdown-item command="result-right">
+              <el-dropdown-item command="right">
                 <span class="layout-item">
                   <i class="eval-icon result-right"></i>
                 </span>
@@ -78,7 +78,7 @@ export default {
     },
 
     resetLayout () {
-      this.$emit('layout-reset')
+      this.$emit('layoutReset')
     }
   }
 }

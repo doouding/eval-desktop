@@ -1,6 +1,6 @@
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/3024-day'
-import 'codemirror/addon/display/autorefresh'
+import autoRefresh from './addon/autorefresh'
 import emmet from '@emmetio/codemirror-plugin'
 import CodeMirror from 'codemirror'
 import javascript from './javascript'
@@ -10,8 +10,9 @@ import html from './html'
 import sass from './sass'
 import pug from './pug'
 
-/** Register emmet plugin */
+/** Register plugin */
 emmet(CodeMirror)
+autoRefresh(CodeMirror)
 
 /** Register highlight */
 javascript(CodeMirror)

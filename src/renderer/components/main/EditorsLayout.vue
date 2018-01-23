@@ -22,19 +22,19 @@
       </div>
     </template>
     <template v-else-if="layout === 'columns'">
-      <div>
+      <div :style="columnsGutter.col1" ref="columnsFirst">
         <slot name="columns-html"></slot>
       </div>
-      <div class="gutter"></div>
-      <div>
+      <div class="gutter horizontal" @mousedown="columnsResize('First')"></div>
+      <div :style="columnsGutter.col2" ref="columnsSecond">
         <slot name="columns-js"></slot>
       </div>
-      <div class="gutter"></div>
-      <div>
+      <div class="gutter horizontal" @mousedown="columnsResize('Second')"></div>
+      <div :style="columnsGutter.col3" ref="columnsThird">
         <slot name="columns-css"></slot>
       </div>
-      <div class="gutter"></div>
-      <div>
+      <div class="gutter horizontal" @mousedown="columnsResize('Third')"></div>
+      <div :style="columnsGutter.col4" ref="columnsForth">
         <slot name="columns-output"></slot>
       </div>
     </template>
@@ -99,6 +99,12 @@ export default {
           top: 50,
           bottom: 50
         }
+      },
+      columns: {
+        col1: 25,
+        col2: 25,
+        col3: 25,
+        col4: 25
       }
     }
   },
@@ -126,6 +132,22 @@ export default {
           bottom: {
             height: `calc(${this.normal.rightArea.bottom}% - 0.5px)`
           }
+        }
+      }
+    },
+    columnsGutter () {
+      return {
+        col1: {
+          width: `calc(${this.columns.col1}% - 0.5px)`
+        },
+        col2: {
+          width: `calc(${this.columns.col2}% - 0.5px)`
+        },
+        col3: {
+          width: `calc(${this.columns.col3}% - 0.5px)`
+        },
+        col4: {
+          width: `calc(${this.columns.col4}% - 1px)`
         }
       }
     }
@@ -159,6 +181,28 @@ export default {
           case 'RightArea':
             this.normal.rightArea.top = pos.y / size.height * 100
             this.normal.rightArea.bottom = (size.width - pos.y) / size.height * 100
+        }
+      })
+    },
+    columnsResize (gutter) {
+      let relativeEl = this.$refs.main
+
+      resize.move(relativeEl, (e) => {
+        let size = resize.size(relativeEl)
+        let pos = resize.mouse(relativeEl, e)
+
+        switch (gutter) {
+          case 'First':
+            this.columns.col1 = pos.x / size.width * 100
+            this.columns.col2 = 100 - this.columns.col1 - this.columns.col3 - this.columns.col4
+            break
+          case 'Second':
+            this.columns.col2 = pos.x / size.width * 100 - this.columns.col1
+            this.columns.col3 = 100 - this.columns.col1 - this.columns.col2 - this.columns.col4
+            break
+          case 'Third':
+            this.columns.col3 = pos.x / size.width * 100 - this.columns.col1 - this.columns.col2
+            this.columns.col4 = 100 - this.columns.col1 - this.columns.col2 - this.columns.col3
         }
       })
     }
@@ -208,4 +252,7 @@ export default {
       height: 1px
       width: 100%
 
+.columns
+  flex-direction: row
+  align-items: stretch
 </style>
