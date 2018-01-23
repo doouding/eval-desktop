@@ -19,7 +19,7 @@ function mouse (el, event) {
 
 /**
  * Get element size
- * @param {HTMLElement} el 
+ * @param {HTMLElement} el
  * @return {Object} contain width and height
  */
 function size (el) {
@@ -31,17 +31,19 @@ function size (el) {
 
 /**
  * Add event listener for mousemove event
- * @param {*} el 
- * @param {*} callback 
+ * @param {*} el The area which mouse move over
+ * @param {*} movecallback The mousemove event callback
+ * @param {*} upCallback The mouseup event callback
  */
-function move (el, callback) {
+function move (el, moveCallback, upCallback) {
   let moveHander = (e) => {
     let elSize = size(el)
     let pos = mouse(el, e)
-    callback(e, elSize, pos)
+    moveCallback(e, elSize, pos)
   }
 
   let unregister = () => {
+    upCallback()
     el.removeEventListener('mousemove', moveHander, false)
     window.removeEventListener('mouseup', unregister, false)
   }
@@ -50,8 +52,21 @@ function move (el, callback) {
   window.addEventListener('mouseup', unregister, false)
 }
 
+/**
+ * Return css style object contain "pointer-events" and "user-select".
+ * These css properties can make animation more smoothly
+ * @param {*} isMove
+ */
+function disableMouseEvent (isMove) {
+  return isMove ? {
+    pointerEvents: 'none',
+    userSelect: 'none'
+  } : {}
+}
+
 export default {
   move,
   mouse,
-  size
+  size,
+  disableMouseEvent
 }

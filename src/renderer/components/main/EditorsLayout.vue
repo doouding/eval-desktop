@@ -1,7 +1,7 @@
 <template>
   <div :class="[layout]" class="editor-layout" ref="main">
     <template v-if="layout === 'normal'">
-      <div ref="normalLeftArea" class="left" :style="normalGutter.left">
+      <div ref="normalLeftArea" :style="normalGutter.left">
         <div class="editor-wrapper" :style="normalGutter.leftArea.top">
           <slot name="normal-html"></slot>
         </div>
@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="gutter horizontal" @mousedown="normalResize('Main')"></div>
-      <div ref="normalRightArea" class="right" :style="normalGutter.right">
+      <div ref="normalRightArea" :style="normalGutter.right">
         <div class="editor-wrapper" :style="normalGutter.rightArea.top">
           <slot name="normal-css"></slot>
         </div>
@@ -58,7 +58,7 @@
       </div>
     </template>
     <template v-else-if="layout === 'right'">
-      <div ref="righLeftArea" :style="rightGutter.left">
+      <div ref="righLeftArea" class="left" :style="rightGutter.left">
         <div class="left" :style="rightGutter.leftArea.row1">
           <slot name="right-html"></slot>
         </div>
@@ -72,7 +72,7 @@
         </div>
       </div>
       <div class="gutter horizontal" @mousedown="rightResize('Main')"></div>
-      <div :style="rightGutter.right">
+      <div class="right" :style="rightGutter.right">
         <slot name="right-output"></slot>
       </div>
     </template>
@@ -89,39 +89,99 @@ export default {
   data () {
     return {
       normal: {
-        left: 50,
-        right: 50,
+        left: {
+          width: 50,
+          move: false
+        },
+        right: {
+          width: 50,
+          move: false
+        },
         leftArea: {
-          top: 50,
-          bottom: 50
+          top: {
+            height: 50,
+            move: false
+          },
+          bottom: {
+            height: 50,
+            move: false
+          }
         },
         rightArea: {
-          top: 50,
-          bottom: 50
+          top: {
+            height: 50,
+            move: false
+          },
+          bottom: {
+            height: 50,
+            move: false
+          }
         }
       },
       columns: {
-        col1: 25,
-        col2: 25,
-        col3: 25,
-        col4: 25
+        col1: {
+          width: 25,
+          move: false
+        },
+        col2: {
+          width: 25,
+          move: false
+        },
+        col3: {
+          width: 25,
+          move: false
+        },
+        col4: {
+          width: 25,
+          move: false
+        }
       },
       bottom: {
-        top: 50,
-        bottom: 50,
+        top: {
+          height: 50,
+          move: false
+        },
+        bottom: {
+          height: 50,
+          move: false
+        },
         topArea: {
-          col1: 33.33,
-          col2: 33.33,
-          col3: 33.34
+          col1: {
+            width: 33.33,
+            move: false
+          },
+          col2: {
+            width: 33.33,
+            move: false
+          },
+          col3: {
+            width: 33.34,
+            move: false
+          }
         }
       },
       right: {
-        left: 50,
-        right: 50,
+        left: {
+          width: 50,
+          move: false
+        },
+        right: {
+          width: 50,
+          move: false
+        },
         leftArea: {
-          row1: 33.33,
-          row2: 33.33,
-          row3: 33.34
+          row1: {
+            height: 33.33,
+            move: false
+          },
+          row2: {
+            height: 33.33,
+            move: false
+          },
+          row3: {
+            height: 33.34,
+            move: false
+          }
         }
       }
     }
@@ -130,25 +190,31 @@ export default {
     normalGutter () {
       return {
         left: {
-          width: `calc(${this.normal.left}% - 0.5px)`
+          width: `calc(${this.normal.left.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.normal.left.move)
         },
         right: {
-          width: `calc(${this.normal.right}% - 0.5px)`
+          width: `calc(${this.normal.right.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.normal.right.move)
         },
         leftArea: {
           top: {
-            height: `calc(${this.normal.leftArea.top}% - 0.5px)`
+            height: `calc(${this.normal.leftArea.top.height}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.normal.leftArea.top.move)
           },
           bottom: {
-            height: `calc(${this.normal.leftArea.bottom}% - 0.5px)`
+            height: `calc(${this.normal.leftArea.bottom.height}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.normal.leftArea.bottom.move)
           }
         },
         rightArea: {
           top: {
-            height: `calc(${this.normal.rightArea.top}% - 0.5px)`
+            height: `calc(${this.normal.rightArea.top.height}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.normal.rightArea.top.move)
           },
           bottom: {
-            height: `calc(${this.normal.rightArea.bottom}% - 0.5px)`
+            height: `calc(${this.normal.rightArea.bottom.height}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.normal.rightArea.bottom.move)
           }
         }
       }
@@ -156,36 +222,45 @@ export default {
     columnsGutter () {
       return {
         col1: {
-          width: `calc(${this.columns.col1}% - 0.5px)`
+          width: `calc(${this.columns.col1.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.columns.col1.move)
         },
         col2: {
-          width: `calc(${this.columns.col2}% - 0.5px)`
+          width: `calc(${this.columns.col2.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.columns.col2.move)
         },
         col3: {
-          width: `calc(${this.columns.col3}% - 0.5px)`
+          width: `calc(${this.columns.col3.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.columns.col3.move)
         },
         col4: {
-          width: `calc(${this.columns.col4}% - 1px)`
+          width: `calc(${this.columns.col4.width}% - 1px)`,
+          ...resize.disableMouseEvent(this.columns.col4.move)
         }
       }
     },
     bottomGutter () {
       return {
         top: {
-          height: `calc(${this.bottom.top}% - 0.5px)`
+          height: `calc(${this.bottom.top.height}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.bottom.top.move)
         },
         bottom: {
-          height: `calc(${this.bottom.bottom}% - 0.5px)`
+          height: `calc(${this.bottom.bottom.height}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.bottom.bottom.move)
         },
         topArea: {
           col1: {
-            width: `calc(${this.bottom.topArea.col1}% - 0.5px)`
+            width: `calc(${this.bottom.topArea.col1.width}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.bottom.topArea.col1.move)
           },
           col2: {
-            width: `calc(${this.bottom.topArea.col2}% - 0.5px)`
+            width: `calc(${this.bottom.topArea.col2.width}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.bottom.topArea.col2.move)
           },
           col3: {
-            width: `calc(${this.bottom.topArea.col3}% - 1px)`
+            width: `calc(${this.bottom.topArea.col3.width}% - 1px)`,
+            ...resize.disableMouseEvent(this.bottom.topArea.col3.move)
           }
         }
       }
@@ -193,20 +268,25 @@ export default {
     rightGutter () {
       return {
         left: {
-          width: `calc(${this.right.left}% - 0.5px)`
+          width: `calc(${this.right.left.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.right.left.move)
         },
         right: {
-          width: `calc(${this.right.right}% - 0.5px)`
+          width: `calc(${this.right.right.width}% - 0.5px)`,
+          ...resize.disableMouseEvent(this.right.right.move)
         },
         leftArea: {
           row1: {
-            height: `calc(${this.right.leftArea.row1}% - 0.5px)`
+            height: `calc(${this.right.leftArea.row1.height}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.right.leftArea.row1.move)
           },
           row2: {
-            height: `calc(${this.right.leftArea.row2}% - 0.5px)`
+            height: `calc(${this.right.leftArea.row2.height}% - 0.5px)`,
+            ...resize.disableMouseEvent(this.right.leftArea.row2.move)
           },
           row3: {
-            height: `calc(${this.right.leftArea.row3}% - 1px)`
+            height: `calc(${this.right.leftArea.row3.height}% - 1px)`,
+            ...resize.disableMouseEvent(this.right.leftArea.row3.move)
           }
         }
       }
@@ -224,101 +304,207 @@ export default {
   methods: {
     normalResize (gutter) {
       let relativeEl = this.$refs['normal' + gutter] || this.$refs.main
+      let mouseMove
+      let mouseUp
 
-      resize.move(relativeEl, (e, size, pos) => {
-        switch (gutter) {
-          case 'Main':
-            this.normal.left = pos.x / size.width * 100
-            this.normal.right = (size.width - pos.x) / size.width * 100
-            break
-          case 'LeftArea':
-            this.normal.leftArea.top = pos.y / size.height * 100
-            this.normal.leftArea.bottom = (size.width - pos.y) / size.height * 100
-            break
-          case 'RightArea':
-            this.normal.rightArea.top = pos.y / size.height * 100
-            this.normal.rightArea.bottom = (size.width - pos.y) / size.height * 100
-        }
-      })
+      switch (gutter) {
+        case 'Main':
+          this.normal.left.move = true
+          this.normal.right.move = true
+          mouseMove = (e, size, pos) => {
+            this.normal.left.width = pos.x / size.width * 100
+            this.normal.right.width = (size.width - pos.x) / size.width * 100
+          }
+          mouseUp = () => {
+            this.normal.left.move = false
+            this.normal.right.move = false
+          }
+          break
+        case 'LeftArea':
+          this.normal.leftArea.top.move = true
+          this.normal.leftArea.bottom.move = true
+          mouseMove = (e, size, pos) => {
+            this.normal.leftArea.top.height = pos.y / size.height * 100
+            this.normal.leftArea.bottom.height = (size.height - pos.y) / size.height * 100
+          }
+          mouseUp = () => {
+            this.normal.leftArea.top.move = false
+            this.normal.leftArea.bottom.move = false
+          }
+          break
+        case 'RightArea':
+          this.normal.rightArea.top.move = true
+          this.normal.rightArea.bottom.move = true
+          mouseMove = (e, size, pos) => {
+            this.normal.rightArea.top.height = pos.y / size.height * 100
+            this.normal.rightArea.bottom.height = (size.height - pos.y) / size.height * 100
+          }
+          mouseUp = () => {
+            this.normal.rightArea.top.move = false
+            this.normal.rightArea.bottom.move = false
+          }
+          break
+      }
+
+      resize.move(relativeEl, mouseMove, mouseUp)
     },
     columnsResize (gutter) {
       let relativeEl = this.$refs.main
+      let mouseMove
+      let mouseUp
 
-      resize.move(relativeEl, (e, size, pos) => {
-        switch (gutter) {
-          case 'First':
-            this.columns.col1 = pos.x / size.width * 100
-            this.columns.col2 = 100 - this.columns.col1 - this.columns.col3 - this.columns.col4
-            break
-          case 'Second':
-            this.columns.col2 = pos.x / size.width * 100 - this.columns.col1
-            this.columns.col3 = 100 - this.columns.col1 - this.columns.col2 - this.columns.col4
-            break
-          case 'Third':
-            this.columns.col3 = pos.x / size.width * 100 - this.columns.col1 - this.columns.col2
-            this.columns.col4 = 100 - this.columns.col1 - this.columns.col2 - this.columns.col3
-        }
-      })
+      switch (gutter) {
+        case 'First':
+          this.columns.col1.move = true
+          this.columns.col2.move = true
+          mouseMove = (e, size, pos) => {
+            this.columns.col1.width = pos.x / size.width * 100
+            this.columns.col2.width = 100 - this.columns.col1.width - this.columns.col3.width - this.columns.col4.width
+          }
+          mouseUp = () => {
+            this.columns.col1.move = false
+            this.columns.col2.move = false
+          }
+          break
+        case 'Second':
+          this.columns.col2.move = true
+          this.columns.col3.move = true
+          mouseMove = (e, size, pos) => {
+            this.columns.col2.width = pos.x / size.width * 100 - this.columns.col1.width
+            this.columns.col3.width = 100 - this.columns.col1.width - this.columns.col2.width - this.columns.col4.width
+          }
+          mouseUp = () => {
+            this.columns.col2.move = false
+            this.columns.col3.move = false
+          }
+          break
+        case 'Third':
+          this.columns.col3.move = true
+          this.columns.col4.move = true
+          mouseMove = (e, size, pos) => {
+            this.columns.col3.width = pos.x / size.width * 100 - this.columns.col1.width - this.columns.col2.width
+            this.columns.col4.width = 100 - this.columns.col1.width - this.columns.col2.width - this.columns.col3.width
+          }
+          mouseUp = () => {
+            this.columns.col3.move = false
+            this.columns.col4.move = false
+          }
+          break
+      }
+
+      resize.move(relativeEl, mouseMove, mouseUp)
     },
     bottomResize (gutter) {
       let relativeEl
+      let mouseMove
+      let mouseUp
+
       if (gutter === 'Main') {
         relativeEl = this.$refs.main
       } else {
         relativeEl = this.$refs.bottomTopArea
       }
 
-      resize.move(relativeEl, (e, size, pos) => {
-        switch (gutter) {
-          case 'Main':
-            this.bottom.top = pos.y / size.height * 100
-            this.bottom.bottom = 100 - this.bottom.top
-            break
-          case 'TopFirst':
-            this.bottom.topArea.col1 = pos.x / size.width * 100
-            this.bottom.topArea.col2 = 100 - this.bottom.topArea.col1 - this.bottom.topArea.col3
-            break
-          case 'TopSecond':
-            this.bottom.topArea.col2 = pos.x / size.width * 100 - this.bottom.topArea.col1
-            this.bottom.topArea.col3 = 100 - this.bottom.topArea.col1 - this.bottom.topArea.col2
-            break
-        }
-      })
+      switch (gutter) {
+        case 'Main':
+          this.bottom.top.move = true
+          this.bottom.bottom.move = true
+          mouseMove = (e, size, pos) => {
+            this.bottom.top.height = pos.y / size.height * 100
+            this.bottom.bottom.height = 100 - this.bottom.top.height
+          }
+          mouseUp = () => {
+            this.bottom.top.move = false
+            this.bottom.bottom.move = false
+          }
+          break
+        case 'TopFirst':
+          this.bottom.topArea.col1.move = true
+          this.bottom.topArea.col2.move = true
+          mouseMove = (e, size, pos) => {
+            this.bottom.topArea.col1.width = pos.x / size.width * 100
+            this.bottom.topArea.col2.width = 100 - this.bottom.topArea.col1.width - this.bottom.topArea.col3.width
+          }
+          mouseUp = () => {
+            this.bottom.topArea.col1.move = false
+            this.bottom.topArea.col2.move = false
+          }
+          break
+        case 'TopSecond':
+          this.bottom.topArea.col2.move = true
+          this.bottom.topArea.col3.move = true
+          mouseMove = (e, size, pos) => {
+            this.bottom.topArea.col2.width = pos.x / size.width * 100 - this.bottom.topArea.col1.width
+            this.bottom.topArea.col3.width = 100 - this.bottom.topArea.col1.width - this.bottom.topArea.col2.width
+          }
+          mouseUp = () => {
+            this.bottom.topArea.col2.move = false
+            this.bottom.topArea.col3.move = false
+          }
+          break
+      }
+
+      resize.move(relativeEl, mouseMove, mouseUp)
     },
     rightResize (gutter) {
       let relativeEl
+      let mouseMove
+      let mouseUp
+
       if (gutter === 'Main') {
         relativeEl = this.$refs.main
       } else {
         relativeEl = this.$refs.righLeftArea
       }
 
-      resize.move(relativeEl, (e, size, pos) => {
-        switch (gutter) {
-          case 'Main':
-            this.right.left = pos.x / size.width * 100
-            this.right.right = (size.width - pos.x) / size.width * 100
-            break
-          case 'leftAreaFirst':
-            this.right.leftArea.row1 = pos.y / size.height * 100
-            this.right.leftArea.row2 = 100 - this.right.leftArea.row1 - this.right.leftArea.row3
-            break
-          case 'leftAreaSecond':
-            this.right.leftArea.row2 = pos.y / size.height * 100 - this.right.leftArea.row1
-            this.right.leftArea.row3 = 100 - this.right.leftArea.row1 - this.right.leftArea.row2
-            break
-        }
-      })
+      switch (gutter) {
+        case 'Main':
+          this.right.left.move = true
+          this.right.right.move = true
+          mouseMove = (e, size, pos) => {
+            this.right.left.width = pos.x / size.width * 100
+            this.right.right.width = (size.width - pos.x) / size.width * 100
+          }
+          mouseUp = () => {
+            this.right.left.move = false
+            this.right.right.move = false
+          }
+          break
+        case 'leftAreaFirst':
+          this.right.leftArea.row1.move = true
+          this.right.leftArea.row2.move = true
+
+          mouseMove = (e, size, pos) => {
+            this.right.leftArea.row1.height = pos.y / size.height * 100
+            this.right.leftArea.row2.height = 100 - this.right.leftArea.row1.height - this.right.leftArea.row3.height
+          }
+          mouseUp = () => {
+            this.right.leftArea.row1.move = false
+            this.right.leftArea.row2.move = false
+          }
+          break
+        case 'leftAreaSecond':
+          this.right.leftArea.row2.move = true
+          this.right.leftArea.row3.move = true
+
+          mouseMove = (e, size, pos) => {
+            this.right.leftArea.row2.height = pos.y / size.height * 100 - this.right.leftArea.row1.height
+            this.right.leftArea.row3.height = 100 - this.right.leftArea.row1.height - this.right.leftArea.row2.height
+          }
+          mouseUp = () => {
+            this.right.leftArea.row2.move = false
+            this.right.leftArea.row3.move = false
+          }
+          break
+      }
+
+      resize.move(relativeEl, mouseMove, mouseUp)
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
-.editor-layout
-  display: flex
-  height: 100%
-
 .gutter
   background-color: #e8e8e8
   &::after
@@ -346,32 +532,27 @@ export default {
     width: 100%
     top: -3px
 
-.normal
-  flex-direction: row
-  align-items: stretch
-  > .left,
-  > .right
-    height: 100%
-    > .gutter
-      height: 1px
-      width: 100%
-
-.columns
-  flex-direction: row
-  align-items: stretch
+.editor-layout
+  height: 100%
 
 .bottom
-  flex-direction: column
-  align-items: stretch
   > .top
-    display: flex
-    align-items: stretch
+    > div
+      float: left
+      height: 100%
 
 .right
-  flex-direction: row
-  align-items: stretch
-  > .left
-    display: flex
-    flex-direction: column
-    align-items: stretch
+  > div
+    float: left
+    height: 100%
+
+.normal
+  > div
+    float: left
+    height: 100%
+
+.columns
+  > div
+    float: left
+    height: 100%
 </style>
