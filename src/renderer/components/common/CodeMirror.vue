@@ -15,7 +15,7 @@
 </template>
 
 <script>
-/** 
+/**
  * @fileoverview Editor component is responsible for writing code, compile code and syntax error prompt
  */
 import CodeMirror from '@/util/codemirror'
@@ -95,10 +95,6 @@ export default {
         this.current = lang
       }
     }
-  },
-
-  destroyed () {
-    console.log('destroyed')
   }
 }
 </script>
