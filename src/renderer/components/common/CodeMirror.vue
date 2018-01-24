@@ -38,7 +38,7 @@ const LANG_MODE_MAP = {
   }
 }
 
-const EMMET_ENABLE = ['html']
+const EMMET_ENABLE = ['HTML']
 
 export default {
   name: 'CodeMirror',
