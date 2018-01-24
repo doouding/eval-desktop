@@ -78,7 +78,7 @@ export default {
     },
 
     resetLayout () {
-      this.$emit('layoutReset')
+      this.$emit('layout-reset')
     }
   }
 }

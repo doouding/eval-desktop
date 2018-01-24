@@ -499,6 +499,9 @@ export default {
       }
 
       resize.move(relativeEl, mouseMove, mouseUp)
+    },
+    resetLayout () {
+      Object.assign(this.$data, this.$options.data())
     }
   }
 }

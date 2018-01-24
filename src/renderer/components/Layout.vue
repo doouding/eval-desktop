@@ -1,10 +1,10 @@
 <template>
   <div class="main-layout">
     <div class="nav-wrapper">
-      <top-bar @layout-change="layoutChange"></top-bar>
+      <top-bar @layout-change="layoutChange" @layout-reset="layoutReset"></top-bar>
     </div>
     <div class="main-wrapper">
-      <editors-layout :layout="layout">
+      <editors-layout ref="editorLayout" :layout="layout">
         <code-mirror :slot="htmlEditorSlot" lang="HTML"></code-mirror>
         <code-mirror :slot="jsEditorSlot" lang="JavaScript"></code-mirror>
         <code-mirror :slot="cssEditorSlot" lang="CSS"></code-mirror>
@@ -46,6 +46,9 @@ export default {
   methods: {
     layoutChange (layout) {
       this.layout = layout
+    },
+    layoutReset () {
+      this.$refs.editorLayout.resetLayout()
     }
   }
 }
