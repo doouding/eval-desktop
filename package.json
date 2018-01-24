@@ -36,7 +36,8 @@
     "sass.js": "^0.10.7",
     "stylus": "^0.54.5",
     "vue": "^2.5.2",
-    "vue-electron": "^1.0.6"
+    "vue-electron": "^1.0.6",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
