@@ -1,8 +1,8 @@
 import pug from 'pug'
 
 export default {
-  'pug': pugCompiler,
-  'html': null
+  'Pug': pugCompiler,
+  'HTML': null
 }
 
 function pugCompiler (code) {
