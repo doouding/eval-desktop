@@ -3,10 +3,10 @@
     <div class="editor-bar">
       <el-dropdown @command="changeLang" trigger="click">
         <span class="el-dropdown-link">
-          {{current}}<i class="el-icon-arrow-down el-icon--right"></i>
+          {{langList[current].name }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="(value, key) in langs" :key="value" :command="key">{{key}}</el-dropdown-item>
+          <el-dropdown-item v-for="(item, index) of langList" :key="item.mimeType" :command="index">{{item.name}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -22,20 +22,38 @@ import CodeMirror from '@/util/codemirror'
 import preprocessor from '@/util/preprocess'
 
 const LANG_MODE_MAP = {
-  'CSS': {
-    'CSS': 'text/css',
-    'Less': 'text/x-less',
-    'Scss': 'text/x-scss',
-    'Sass': 'text/x-sass'
-  },
+  'CSS': [
+    {
+      name: 'CSS',
+      mimeType: 'text/css'
+    },
+    {
+      name: 'Less',
+      mimeType: 'text/x-less'
+    },
+    {
+      name: 'Scss',
+      mimeType: 'text/x-scss'
+    },
+    {
+      name: 'Sass',
+      mimeType: 'text-sass'
+    }
+  ],
 
-  'HTML': {
-    'HTML': 'text/html'
-  },
+  'HTML': [
+    {
+      name: 'HTML',
+      mimeType: 'text/html'
+    }
+  ],
 
-  'JavaScript': {
-    'JavaScript': 'text/javascript'
-  }
+  'JavaScript': [
+    {
+      name: 'JavaScript',
+      mimeType: 'text/javascript'
+    }
+  ]
 }
 
 const EMMET_ENABLE = ['HTML']
@@ -44,28 +62,39 @@ export default {
   name: 'CodeMirror',
 
   mounted () {
-    let options = {
-      mode: LANG_MODE_MAP[this.lang][this.lang]
+    let options
+
+    if (!sessionStorage.getItem(`codemirror-${this.lang}`)) {
+      options = {}
+      options.codemirror = {
+        mode: LANG_MODE_MAP[this.lang][0].mimeType
+      }
+    } else {
+      options = JSON.parse(sessionStorage.getItem(`codemirror-${this.lang}`))
+      sessionStorage.removeItem(`codemirror-${this.lang}`)
     }
 
-    if (EMMET_ENABLE.includes(this.lang)) {
-      options.extraKeys = {
+    if (EMMET_ENABLE.includes(this.langList[this.current].name)) {
+      options.codemirror.extraKeys = {
         'Tab': 'emmetExpandAbbreviation',
         'Enter': 'emmetInsertLineBreak'
       }
     }
 
-    this.editor = CodeMirror(this.$el.querySelector('.editor-wrap'), options)
-    // set default language
-    this.current = this.lang
-    this.langs = LANG_MODE_MAP[this.lang]
+    this.editor = CodeMirror(this.$el.querySelector('.editor-wrap'), options.codemirror)
+    this.current = options.current || 0
   },
 
   data () {
     return {
-      current: '',
-      langs: null,
+      current: 0,
       editor: null
+    }
+  },
+
+  computed: {
+    langList () {
+      return LANG_MODE_MAP[this.lang]
     }
   },
 
@@ -89,12 +118,31 @@ export default {
           })
       })
     },
-    changeLang (lang) {
-      if (this.current !== lang) {
-        this.editor.setOption('mode', this.langs[lang])
-        this.current = lang
+    changeLang (langIndex) {
+      if (this.current !== langIndex) {
+        this.editor.setOption('mode', this.langList[langIndex].mimeType)
+        this.current = langIndex
+        this.setEmmet()
+      }
+    },
+    setEmmet () {
+      if (EMMET_ENABLE.includes(this.langList[this.current].name)) {
+        this.editor.setOption('extraKeys', {
+          'Tab': 'emmetExpandAbbreviation',
+          'Enter': 'emmetInsertLineBreak'
+        })
       }
     }
+  },
+
+  beforeDestroy () {
+    sessionStorage.setItem(`codemirror-${this.lang}`, JSON.stringify({
+      codemirror: {
+        value: this.editor.getValue(),
+        mode: this.editor.getOption('mode')
+      },
+      current: this.current
+    }))
   }
 }
 </script>
