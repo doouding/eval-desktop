@@ -43,16 +43,16 @@ export default {
   methods: {
     load (...args) {
       this.iframe.contentWindow.location.reload()
-      this.el.contentDocument.write(this.integrateHTML(...args))
-      this.el.contentDocument.close()
+      this.iframe.contentDocument.open()
+      this.iframe.contentDocument.write(this.integrateHTML(...args))
+      this.iframe.contentDocument.close()
     },
 
     /**
-     * 将代码组合成完整的html代码
+     * Intergrate code into page
      */
     integrateHTML (html, js, css, libs) {
       /* eslint-disable */
-      var libScripts = libs.map(l => '<script src="' + l.link + '><\/script>').join('')
 
       return `<DOCTYPE html>\
         <html>
@@ -61,7 +61,6 @@ export default {
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
             <meta name="renderer" content="webkit">
             <meta name="force-rendering" content="webkit">
-            ${libScripts}
             <style>${css}</style>
           </head>
           <body>

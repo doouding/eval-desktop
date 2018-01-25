@@ -1,14 +1,18 @@
 <template>
   <div class="main-layout">
     <div class="nav-wrapper">
-      <top-bar @layout-change="layoutChange" @layout-reset="layoutReset"></top-bar>
+      <top-bar 
+        @layout-change="layoutChange"
+        @layout-reset="layoutReset"
+        @run="run">
+      </top-bar>
     </div>
     <div class="main-wrapper">
       <editors-layout ref="editorLayout" :layout="layout">
-        <code-mirror :slot="htmlEditorSlot" lang="HTML"></code-mirror>
-        <code-mirror :slot="jsEditorSlot" lang="JavaScript"></code-mirror>
-        <code-mirror :slot="cssEditorSlot" lang="CSS"></code-mirror>
-        <output-frame slot="normal-output"></output-frame>
+        <code-mirror ref="htmlEditor" :slot="htmlEditorSlot" lang="HTML"></code-mirror>
+        <code-mirror ref="jsEditor" :slot="jsEditorSlot" lang="JavaScript"></code-mirror>
+        <code-mirror ref="cssEditor" :slot="cssEditorSlot" lang="CSS"></code-mirror>
+        <output-frame ref="outputFrame" :slot="outputSlot"></output-frame>
       </editors-layout>
     </div>
   </div>
@@ -41,6 +45,9 @@ export default {
     },
     cssEditorSlot () {
       return this.layout + '-css'
+    },
+    outputSlot () {
+      return this.layout + '-output'
     }
   },
   methods: {
@@ -49,6 +56,19 @@ export default {
     },
     layoutReset () {
       this.$refs.editorLayout.resetLayout()
+    },
+    run () {
+      let js = this.$refs.jsEditor.compile()
+      let css = this.$refs.cssEditor.compile()
+      let html = this.$refs.htmlEditor.compile()
+
+      Promise.all([html, js, css])
+        .then((result) => {
+          this.$refs.outputFrame.load(...result)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     }
   }
 }

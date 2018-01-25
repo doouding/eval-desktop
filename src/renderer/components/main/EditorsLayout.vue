@@ -54,7 +54,7 @@
       </div>
       <div class="gutter vertical" @mousedown="bottomResize('Main')"></div>
       <div :style="bottomGutter.bottom" class="bottom">
-        <slot name="aside-output"></slot>
+        <slot name="bottom-output"></slot>
       </div>
     </template>
     <template v-else-if="layout === 'right'">

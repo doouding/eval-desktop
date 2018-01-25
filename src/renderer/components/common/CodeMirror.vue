@@ -111,11 +111,15 @@ export default {
   methods: {
     compile () {
       return new Promise((resolve, reject) => {
-        preprocessor[this.lang](this.value)
-          .then(resolve)
-          .catch((err) => {
-            reject(err)
-          })
+        if (!preprocessor[this.langList[this.current].name]) {
+          resolve(this.editor.getValue())
+        } else {
+          preprocessor[this.langList[this.current].name](this.editor.getValue())
+            .then(resolve)
+            .catch((err) => {
+              reject(err)
+            })
+        }
       })
     },
     changeLang (langIndex) {

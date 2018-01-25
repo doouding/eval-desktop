@@ -2,7 +2,7 @@
   <div class="top-bar">
     <el-row type="flex" justify="space-between" align="middle">
       <el-col :span="6" class="nav-left">
-        <el-button type="primary" size="small">
+        <el-button type="primary" size="small" @click="run">
           <span>
             <i class="eval-icon play left"></i>
             运行
@@ -79,6 +79,10 @@ export default {
 
     resetLayout () {
       this.$emit('layout-reset')
+    },
+
+    run () {
+      this.$emit('run')
     }
   }
 }
