@@ -2,21 +2,20 @@ import less from 'less/dist/less.min'
 import sass from 'sass.js'
 
 export default {
-  'less': parseLess,
-  'scss': parseScss,
-  'sass': parseSass,
-  'css': null
+  'Less': parseLess,
+  'Scss': parseScss,
+  'Sass': parseSass,
+  'CSS': null
 }
 
-const lessCompiler = less.Parser()
 function parseLess (code) {
   return new Promise((resolve, reject) => {
-    lessCompiler.parse(code, (err, result) => {
+    less.render(code, (err, result) => {
       if (err) {
         reject(err)
       }
 
-      resolve(result.toCSS())
+      resolve(result.css)
     })
   })
 }
