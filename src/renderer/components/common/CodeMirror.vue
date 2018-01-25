@@ -136,6 +136,12 @@ export default {
   },
 
   beforeDestroy () {
+    /**
+     * Editor component will destroy when the layout change. This will make
+     * editor's setting and content dispear. So we need to store
+     * the setting and content in sessionStorage. When an alternative editor component
+     * created, it can get setting and content directly from sessionStorage.
+     */
     sessionStorage.setItem(`codemirror-${this.lang}`, JSON.stringify({
       codemirror: {
         value: this.editor.getValue(),
