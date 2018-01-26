@@ -7,18 +7,23 @@
 <template>
   <div class="iframe-wrapper" style="width:100%; height:100%">
     <div v-show="cover" class="iframe-alter"></div>
-    <iframe class="iframe"
-      name="output"
-      frameborder="0"
-      sandbox="allow-forms allow-modals allow-pointer-lock allow-scripts allow-popups allow-same-origin">
-    </iframe>
   </div>
 </template>
 
 <script>
 export default {
   mounted () {
-    this.iframe = this.$el.querySelector('iframe[name="output"]')
+    if (window.__iframe) {
+      this.iframe = window.__iframe
+    } else {
+      this.iframe = document.createElement('iframe')
+      this.iframe.name = "output"
+      this.iframe.frameborder = "0"
+      this.iframe.className = "iframe"
+      this.sandbox = "allow-forms allow-modals allow-pointer-lock allow-scripts allow-popups allow-same-origin"
+    }
+
+    this.$el.appendChild(this.iframe)
 
     /**
      * mousemove event listener not working on iframe element
@@ -70,6 +75,9 @@ export default {
         </html>`
       /* eslint-enable */
     }
+  },
+  beforeDestroy () {
+    window.__iframe = this.iframe
   }
 }
 </script>
