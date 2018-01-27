@@ -13,15 +13,13 @@
 <script>
 export default {
   mounted () {
-    if (window.__iframe) {
-      this.iframe = window.__iframe
-    } else {
-      this.iframe = document.createElement('iframe')
-      this.iframe.name = "output"
-      this.iframe.frameborder = "0"
-      this.iframe.className = "iframe"
-      this.sandbox = "allow-forms allow-modals allow-pointer-lock allow-scripts allow-popups allow-same-origin"
-    }
+    this.iframe = document.createElement('iframe')
+    this.iframe.name = 'output'
+    this.iframe.frameBorder = '0'
+    this.iframe.className = 'iframe'
+    this.iframe.width = '100%'
+    this.iframe.height = '100%'
+    this.iframe.sandbox = 'allow-forms allow-modals allow-pointer-lock allow-scripts allow-popups allow-same-origin'
 
     this.$el.appendChild(this.iframe)
 
@@ -75,9 +73,6 @@ export default {
         </html>`
       /* eslint-enable */
     }
-  },
-  beforeDestroy () {
-    window.__iframe = this.iframe
   }
 }
 </script>
