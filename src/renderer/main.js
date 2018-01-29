@@ -1,5 +1,7 @@
 import '@/assets/styles/index.sass'
 import Vue from 'vue'
+import VueRx from 'vue-rx'
+import Rx from 'rxjs/Rx'
 import HotKey from '@/plugins/hot-key'
 import Element from '@/plugins/element-ui'
 import App from './App'
@@ -15,6 +17,8 @@ Vue.use(HotKey)
 
 /* use element-ui */
 Vue.use(Element)
+
+Vue.use(VueRx, Rx)
 
 /* eslint-disable no-new */
 new Vue({
