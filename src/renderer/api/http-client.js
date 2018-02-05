@@ -50,7 +50,7 @@ function reqAssembleFactory (stringify, fetchOption, headers) {
     },
     {
       method: method.toUpperCase(),
-      body: stringify(data)
+      body: data ? stringify(data) : null
     }, fetchOption)
   }
 }
@@ -87,5 +87,10 @@ export default class HttpClient {
   delete (url, data, params = null, headers = []) {
     return fetch(this.URLAssemble(url, params),
       this.reqAssemble('delete', data, headers))
+  }
+
+  req (method, url, data, params = null, headers = []) {
+    return fetch(this.URLAssemble(url, params),
+      this.reqAssemble(method, data, headers))
   }
 }
