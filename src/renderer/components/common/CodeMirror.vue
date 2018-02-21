@@ -28,10 +28,6 @@ const LANG_MODE_MAP = {
       mimeType: 'text/css'
     },
     {
-      name: 'Less',
-      mimeType: 'text/x-less'
-    },
-    {
       name: 'Scss',
       mimeType: 'text/x-scss'
     },
