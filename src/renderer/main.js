@@ -4,7 +4,20 @@ import VueRx from 'vue-rx'
 import Rx from 'rxjs/Rx'
 import HotKey from '@/plugins/hot-key'
 import Element from '@/plugins/element-ui'
-import App from './App'
+import AV from 'leancloud-storage'
+import config from './config'
+
+/** init LeanCloud SDK */
+AV.init({
+  appId: config.AppID,
+  appKey: config.AppKey
+})
+
+/* eslint-disable */
+const App = require('./App').default
+/* eslint-enable */
+
+require('./store')
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
@@ -25,3 +38,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 }).$mount('#app')
+/* eslint-enble */
