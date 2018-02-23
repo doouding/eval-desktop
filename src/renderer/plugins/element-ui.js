@@ -7,10 +7,17 @@ import {
   Notification,
   Row,
   Col,
+  Dialog,
+  Form,
+  FormItem,
   Button,
+  Input,
+  Menu,
+  MenuItem,
   Dropdown,
   DropdownItem,
-  DropdownMenu
+  DropdownMenu,
+  MessageBox
 } from 'element-ui'
 
 export default function install (Vue) {
@@ -20,6 +27,12 @@ export default function install (Vue) {
   Vue.use(Dropdown)
   Vue.use(DropdownMenu)
   Vue.use(DropdownItem)
+  Vue.use(Dialog)
+  Vue.use(Form)
+  Vue.use(FormItem)
+  Vue.use(Input)
+  Vue.use(Menu)
+  Vue.use(MenuItem)
 
   Object.defineProperties(Vue.prototype, {
     '$msg': {
@@ -27,6 +40,9 @@ export default function install (Vue) {
     },
     '$notify': {
       value: Notification
+    },
+    '$confirm': {
+      value: MessageBox.confirm
     }
   })
 }

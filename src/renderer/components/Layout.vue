@@ -15,10 +15,12 @@
         <output-frame ref="outputFrame" :slot="outputSlot"></output-frame>
       </editors-layout>
     </div>
+    <modals></modals>
   </div>
 </template>
 
 <script>
+import Modals from './Modals'
 import EditorsLayout from './main/EditorsLayout'
 import TopBar from './main/Topbar'
 import CodeMirror from './common/CodeMirror'
@@ -29,7 +31,8 @@ export default {
     CodeMirror,
     EditorsLayout,
     TopBar,
-    OutputFrame
+    OutputFrame,
+    Modals
   },
   data () {
     return {

@@ -53,6 +53,34 @@
               <i class="eval-icon reset" style="font-size: 1.3em"></i>
             </span>
           </el-button>
+          <el-button class="layout-action" type="text" @click="showLoginDialog" v-if="!user$$.authenticated">
+            <span class="action-text">登陆</span>
+          </el-button>
+          <el-button class="layout-action" type="text" @click="showRegisterDialog" v-if="!user$$.authenticated">
+            <span class="action-text">注册</span>
+          </el-button>
+          <el-dropdown class="layout-action" @command="openSetting" v-if="user$$.authenticated" trigger="click">
+            <span class="layout-dropdown-link">
+              <i class="eval-icon setting" style="font-size: 1.1em"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="codeRepoDialog">
+                <span class="setting-item">
+                  我的代码库
+                </span>
+              </el-dropdown-item>
+              <el-dropdown-item command="settingDialog">
+                <span class="setting-item">
+                  我的设置
+                </span>
+              </el-dropdown-item>
+              <el-dropdown-item command="logOut">
+                <span class="setting-item">
+                  退出
+                </span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </span>
       </el-col>
     </el-row>
@@ -60,10 +88,19 @@
 </template>
 
 <script>
+import { user$ } from '../../store/root'
+import Event from '../../util/event'
+
 export default {
   data () {
     return {
       isFullResult: false
+    }
+  },
+
+  subscriptions () {
+    return {
+      user$$: user$
     }
   },
 
@@ -83,6 +120,20 @@ export default {
 
     run () {
       this.$emit('run')
+    },
+
+    openSetting (command) {
+      if (command === 'codeRepoDialog' || command === 'settingDialog') {
+        Event.$emit('dialog', command)
+      }
+    },
+
+    showLoginDialog () {
+      Event.$emit('dialog', 'loginDialog')
+    },
+
+    showRegisterDialog () {
+      Event.$emit('dialog', 'registerDialog')
     }
   }
 }
@@ -110,7 +161,7 @@ export default {
   color: #666!important
 
 .layout-action
-  margin-right: .7em
+  margin-left: .7em
 
 .layout-dropdown-link
   color: $theme-color
@@ -118,4 +169,13 @@ export default {
 
 .layout-item
   font-size: 20px
+
+.setting-item
+  font-size: 13px
+
+.action-text
+  font-weight: 200
+  font-size: 13px
+  position: relative
+  bottom: 2px
 </style>
