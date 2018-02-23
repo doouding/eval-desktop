@@ -33,7 +33,7 @@ const LANG_MODE_MAP = {
     },
     {
       name: 'Sass',
-      mimeType: 'text-sass'
+      mimeType: 'text/x-sass'
     }
   ],
 

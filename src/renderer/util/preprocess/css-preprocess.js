@@ -1,12 +1,12 @@
-import sass from 'sass.js'
+import Sass from 'sass.js/dist/sass.js'
 
 export default {
-  'Scss': parseScss,
+  'CSS': null,
   'Sass': parseSass,
-  'CSS': null
+  'Scss': parseScss
 }
 
-const sassCompiler = sass
+const sassCompiler = new Sass('/static/sass.worker.js')
 function parseSass (code) {
   return new Promise((resolve, reject) => {
     sassCompiler.compile(code, { indentedSyntax: true }, (result) => {
