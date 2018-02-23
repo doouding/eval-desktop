@@ -3,7 +3,6 @@
 process.env.BABEL_ENV = 'renderer'
 
 const path = require('path')
-const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
@@ -18,18 +17,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
-let whiteListedModules = ['vue']
 
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
     renderer: path.join(__dirname, '../src/renderer/main.js')
   },
-  externals: [
-    ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
-  ],
   module: {
     rules: [
+      // Check code style
       {
         test: /\.(js|vue)$/,
         enforce: 'pre',
@@ -41,6 +37,7 @@ let rendererConfig = {
           }
         }
       },
+      // Load CSS
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
@@ -48,6 +45,7 @@ let rendererConfig = {
           use: 'css-loader'
         })
       },
+      // Load Sass
       {
         test: /\.sass$/,
         use: ExtractTextPlugin.extract({
@@ -55,15 +53,18 @@ let rendererConfig = {
           use: ['css-loader', 'sass-loader']
         })
       },
+      // Load HTML
       {
         test: /\.html$/,
         use: 'vue-html-loader'
       },
+      // Transilate code
       {
         test: /\.js$/,
         use: 'babel-loader',
         exclude: /node_modules/
       },
+      // 
       {
         test: /\.node$/,
         use: 'node-loader'
@@ -111,10 +112,6 @@ let rendererConfig = {
       }
     ]
   },
-  node: {
-    __dirname: process.env.NODE_ENV !== 'production',
-    __filename: process.env.NODE_ENV !== 'production'
-  },
   plugins: [
     new ExtractTextPlugin('styles.css'),
     new HtmlWebpackPlugin({
@@ -124,17 +121,20 @@ let rendererConfig = {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
         removeComments: true
-      },
-      nodeModules: process.env.NODE_ENV !== 'production'
-        ? path.resolve(__dirname, '../node_modules')
-        : false
+      }
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '../static'),
+        to: path.join(__dirname, '../dist/electron/static'),
+        ignore: ['.*']
+      }
+    ])
   ],
   output: {
     filename: '[name].js',
-    libraryTarget: 'commonjs2',
     path: path.join(__dirname, '../dist/electron')
   },
   resolve: {
@@ -146,7 +146,7 @@ let rendererConfig = {
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
   },
-  target: 'electron-renderer'
+  target: 'web'
 }
 
 /**
@@ -167,14 +167,6 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    new BabiliWebpackPlugin(),
-    new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/electron/static'),
-        ignore: ['.*']
-      }
-    ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),

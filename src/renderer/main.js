@@ -19,7 +19,6 @@ const App = require('./App').default
 
 require('./store')
 
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 
 /* use element-ui */

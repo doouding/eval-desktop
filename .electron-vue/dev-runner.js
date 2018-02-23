@@ -50,6 +50,7 @@ function logStats (proc, data) {
 function startRenderer () {
   return new Promise((resolve, reject) => {
     rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client-hot-reload')].concat(rendererConfig.entry.renderer)
+    console.log(rendererConfig.entry.renderer)
 
     const compiler = webpack(rendererConfig)
     hotMiddleware = webpackHotMiddleware(compiler, { 
@@ -68,6 +69,7 @@ function startRenderer () {
       logStats('Renderer', stats)
     })
 
+    console.log(path.join(__dirname, '../'))
     const server = new WebpackDevServer(
       compiler,
       {
