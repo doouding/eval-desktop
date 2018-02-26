@@ -1,5 +1,4 @@
-# eval-desktop
-
+<h1 align="center">Eval.js</h1>
 <div align="center">A desktop app like jsfiddle runs offline</div>
 <p align="center">
   <img width="" src="https://github.com/codertx/eval-desktop/raw/master/demo.png">
@@ -7,14 +6,18 @@
 
 #### Todo Features
 
-- [x] HTML preprocessor support: Pug
-- [x] CSS preprocessor support: Sass, SCSS, LESS, Stylus
+- [x] CSS preprocessor support: Sass
 - [x] Emmet support for HTML
+- [ ] Layout change
+- [ ] Babel support for JavaScript
 - [ ] Common boilerplate support
 - [ ] Hotkey support
-- [ ] Online edition
+- [ ] i18n
 
 #### Build Setup
+
+The backend is powered by Bass service provider [LeanCloud](https://leancloud.cn/).
+If you want to create your own Eval.js. You should create an LeanCloud app and write the app key to the file `src/renderer/config/index.example.js`. Then you can take following steps.
 
 ``` bash
 # install dependencies
@@ -30,3 +33,6 @@ yarn run build
 yarn run lint
 
 ```
+
+#### Why introduced to Rxjs?
+I made this project for learning purpose. In facts, the data logical behind this app is not so complicated. The reason why I introduced to Rxjs is to learn the new concept of Rxjs.
