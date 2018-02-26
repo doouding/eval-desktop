@@ -33,6 +33,10 @@ export function current () {
   }
 }
 
+export function raw () {
+  return User.current()
+}
+
 /**
  * Login user
  * @param {*} username
