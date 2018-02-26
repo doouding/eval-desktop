@@ -1,3 +1,1 @@
-export default {
-  'HTML': null
-}
+export default {}

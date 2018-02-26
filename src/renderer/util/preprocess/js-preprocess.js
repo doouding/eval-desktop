@@ -1,3 +1,1 @@
-export default {
-  'JavaScript': null
-}
+export default {}
