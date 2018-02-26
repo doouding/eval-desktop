@@ -9,9 +9,9 @@
     </div>
     <div class="main-wrapper">
       <editors-layout ref="editorLayout" :layout="layout">
-        <code-mirror ref="htmlEditor" :slot="htmlEditorSlot" lang="HTML"></code-mirror>
-        <code-mirror ref="jsEditor" :slot="jsEditorSlot" lang="JavaScript"></code-mirror>
-        <code-mirror ref="cssEditor" :slot="cssEditorSlot" lang="CSS"></code-mirror>
+        <code-mirror ref="htmlEditor" :slot="htmlEditorSlot" lang-type="html"></code-mirror>
+        <code-mirror ref="jsEditor" :slot="jsEditorSlot" lang-type="javascript"></code-mirror>
+        <code-mirror ref="cssEditor" :slot="cssEditorSlot" lang-type="css"></code-mirror>
         <output-frame ref="outputFrame" :slot="outputSlot"></output-frame>
       </editors-layout>
     </div>
