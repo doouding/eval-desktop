@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import * as random from '../../util/random'
+
 export default {
   mounted () {
     this.iframe = document.createElement('iframe')
@@ -51,6 +53,45 @@ export default {
       this.iframe.contentDocument.close()
     },
 
+    sandbox (js) {
+      let sandbox = '__sandbox' + random.string(10)
+      let env = '__env' + random.string(10)
+
+      return `
+      'use strict';
+      function ${sandbox} (win) {
+        var parent = undefined;
+        var top = undefined;
+        var frameElement = undefined;
+        var frames = undefined
+        var window = {};
+
+        var blackListWin = ['top', 'parent', 'frameElement', 'frames', 'window']
+
+        for (var item of blackListWin) {
+          if (item === 'frameElement') delete win[item]
+          if (item !== 'top' && item !== 'window') win[item] = undefined
+        }
+
+        for (var item in win) {
+          if (blackListWin.includes(item)) {
+            
+          }
+          window[item] = win[item]
+        }
+
+        Object.defineProperty(document, 'defaultView', { value: undefined })
+
+        function ${env} () {
+          ${js}
+        }
+
+        ${env}.call(window)
+      }
+      ${sandbox}(window)
+      `
+    },
+
     /**
      * Intergrate code into page
      */
@@ -68,7 +109,7 @@ export default {
           </head>
           <body>
           ${html}
-          <script>${js}<\/script>
+          <script>${this.sandbox(js)}<\/script>
           </body>
         </html>`
       /* eslint-enable */
