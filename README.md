@@ -34,5 +34,5 @@ yarn run lint
 
 ```
 
-#### Why introduced to Rxjs?
+#### Why introduced Rxjs?
 I made this project for learning purpose. In facts, the data logical behind this app is not so complicated. The reason why I introduced to Rxjs is to learn the new concept of Rxjs.
