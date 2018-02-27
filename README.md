@@ -8,7 +8,7 @@
 
 - [x] CSS preprocessor support: Sass
 - [x] Emmet support for HTML
-- [ ] Layout change
+- [x] Layout change
 - [ ] Babel support for JavaScript
 - [ ] Common boilerplate support
 - [ ] Hotkey support
@@ -35,4 +35,4 @@ yarn run lint
 ```
 
 #### Why introduced Rxjs?
-I made this project for learning purpose. In facts, the data logical behind this app is not so complicated. The reason why I introduced to Rxjs is to learn the new concept of Rxjs.
+I made this project for learning purpose. In facts, the data logical behind this app is not so complicated. The reason why I introduced Rxjs is to learn the new concept of Rxjs.
