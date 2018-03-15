@@ -20,16 +20,20 @@ export function fetch () {
         resolve(instance)
       })
       .catch((e) => {
-        console.log(e)
         reject(e)
       })
   })
 }
 
-export function update (setting, modify) {
-  let newSetting = Object.assign(JSON.parse(setting.get('value')), modify)
+/**
+ * Update setting
+ * @param {*} modified json stringified setting string
+ */
+export function update (modified) {
+  let objectId = user.raw().get('setting').get('objectId')
+  let setting = Setting.createWithoutData('setting', objectId)
 
-  setting.set('value', JSON.stringify(newSetting))
+  setting.set('value', JSON.stringify(modified))
 
   return setting.save()
 }

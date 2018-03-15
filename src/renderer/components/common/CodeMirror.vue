@@ -1,6 +1,6 @@
 <template>
   <div class="codemirror-component">
-    <div class="editor-bar">
+    <div class="editor-bar" v-if="preprocessor !== null">
       <el-dropdown @command="changeLang" trigger="click">
         <span class="el-dropdown-link">
           {{preprocessorList[preprocessor].name }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -21,7 +21,7 @@
 import CodeMirror from '@/util/codemirror'
 import langPreprocessor from '../../config/lang'
 import compiler from '@/util/preprocess'
-import { setting$ } from '../../store/root'
+import { setting$$ } from '../../store/root'
 
 export default {
   name: 'CodeMirror',
@@ -46,7 +46,8 @@ export default {
   subscriptions () {
     return {
       /** preprocessor */
-      preprocessor: setting$.map((data) => { return data.langs[this.langType] })
+      preprocessor: setting$$.map((data) => data && data.langs[this.langType]),
+      indentation: setting$$.map((data) => data && data.indentation)
     }
   },
 
@@ -57,30 +58,49 @@ export default {
   },
 
   mounted () {
-    let options
+    let subscription = setting$$.subscribe((setting) => {
+      if (setting) {
+        console.log(this.indentation)
+        this.initEditor()
+        subscription.unsubscribe()
 
-    if (!sessionStorage.getItem(`codemirror-${this.langType}`)) {
-      options = {}
-      options.codemirror = {
-        mode: this.preprocessorList[this.preprocessor].mimeType
+        this.$watch('indentation', () => {
+          this.setIndentation()
+        })
       }
-    } else {
-      options = JSON.parse(sessionStorage.getItem(`codemirror-${this.langType}`))
-      sessionStorage.removeItem(`codemirror-${this.langType}`)
-    }
-
-    if (this.preprocessorList[this.preprocessor].name === 'HTML') {
-      options.codemirror.extraKeys = {
-        'Tab': 'emmetExpandAbbreviation',
-        'Enter': 'emmetInsertLineBreak'
-      }
-    }
-
-    this.editor = CodeMirror(this.$el.querySelector('.editor-wrap'), options.codemirror)
-    this.preprocessor = options.preprocessor || this.preprocessor
+    })
   },
 
   methods: {
+    setIndentation () {
+      this.editor.setOption('tabSize', this.indentation)
+    },
+
+    initEditor () {
+      let options
+
+      if (!sessionStorage.getItem(`codemirror-${this.langType}`)) {
+        options = {}
+        options.codemirror = {
+          mode: this.preprocessorList[this.preprocessor].mimeType,
+          smartIndent: false,
+          tabSize: this.indentation
+        }
+      } else {
+        options = JSON.parse(sessionStorage.getItem(`codemirror-${this.langType}`))
+        sessionStorage.removeItem(`codemirror-${this.langType}`)
+      }
+
+      if (this.preprocessorList[this.preprocessor].name === 'HTML') {
+        options.codemirror.extraKeys = {
+          'Tab': 'emmetExpandAbbreviation',
+          'Enter': 'emmetInsertLineBreak'
+        }
+      }
+
+      this.editor = CodeMirror(this.$el.querySelector('.editor-wrap'), options.codemirror)
+      this.preprocessor = options.preprocessor || this.preprocessor
+    },
     compile () {
       return new Promise((resolve, reject) => {
         if (this.preprocessorList[this.preprocessor].nocompile) {

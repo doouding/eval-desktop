@@ -13,6 +13,8 @@ import {
   Button,
   Input,
   Menu,
+  Select,
+  Option,
   MenuItem,
   Dropdown,
   DropdownItem,
@@ -33,6 +35,8 @@ export default function install (Vue) {
   Vue.use(Input)
   Vue.use(Menu)
   Vue.use(MenuItem)
+  Vue.use(Select)
+  Vue.use(Option)
 
   Object.defineProperties(Vue.prototype, {
     '$msg': {

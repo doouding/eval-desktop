@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { user$ } from '../../store/root'
+import { user$$ } from '../../store/root'
 import Event from '../../util/event'
 
 export default {
@@ -100,7 +100,7 @@ export default {
 
   subscriptions () {
     return {
-      user$$: user$
+      user$$: user$$
     }
   },
 
