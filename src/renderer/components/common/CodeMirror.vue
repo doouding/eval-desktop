@@ -28,7 +28,9 @@ export default {
 
   data () {
     return {
-      editor: null
+      editor: null,
+      preprocessor: null,
+      indentation: 2
     }
   },
 
@@ -43,14 +45,6 @@ export default {
     }
   },
 
-  subscriptions () {
-    return {
-      /** preprocessor */
-      preprocessor: setting$$.map((data) => data && data.langs[this.langType]),
-      indentation: setting$$.map((data) => data && data.indentation)
-    }
-  },
-
   computed: {
     preprocessorList () {
       return langPreprocessor[this.langType]
@@ -60,11 +54,20 @@ export default {
   mounted () {
     let subscription = setting$$.subscribe((setting) => {
       if (setting) {
-        console.log(this.indentation)
-        this.initEditor()
-        subscription.unsubscribe()
+        this.preprocessor = setting.langs[this.langType]
+        this.indentation = setting.indentation
 
-        this.$watch('indentation', () => {
+        this.initEditor()
+
+        // when the listener was calling synchronously
+        // the subscription is still undefined
+        setTimeout(() => {
+          subscription.unsubscribe()
+        }, 0)
+
+        // subscribe indentaion change and change editor option dynamic
+        this._indentationChange = setting$$.subscribe((setting) => {
+          this.indentation = setting.indentation
           this.setIndentation()
         })
       }
@@ -72,6 +75,11 @@ export default {
   },
 
   methods: {
+    unsubIndentationChange () {
+      this._indentationChange.unsubscribe()
+      this._indentationChange = null
+    },
+
     setIndentation () {
       this.editor.setOption('tabSize', this.indentation)
     },
@@ -148,6 +156,7 @@ export default {
 
   beforeDestroy () {
     this.saveTempData()
+    this.unsubIndentationChange()
   }
 }
 </script>
