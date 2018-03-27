@@ -88,7 +88,8 @@
 </template>
 
 <script>
-import { user$$ } from '../../store/root'
+import { user$$, signal$ } from '../../store/root'
+import * as user from '../../api/user.api'
 import Event from '../../util/event'
 
 export default {
@@ -125,6 +126,9 @@ export default {
     openSetting (command) {
       if (command === 'codeRepoDialog' || command === 'settingDialog') {
         Event.$emit('dialog', command)
+      } else {
+        user.logOut()
+        signal$.next(['user'])
       }
     },
 
