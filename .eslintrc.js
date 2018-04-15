@@ -16,6 +16,8 @@ module.exports = {
     'html'
   ],
   'rules': {
+    // allow reject empty
+    'prefer-promise-reject-errors': 'off',
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // allow async-await
