@@ -4,6 +4,7 @@ import autoRefresh from './addon/autorefresh'
 import emmet from '@emmetio/codemirror-plugin'
 import CodeMirror from 'codemirror'
 import javascript from './javascript'
+import jsx from './jsx'
 import css from './css'
 import xml from './xml'
 import html from './html'
@@ -16,6 +17,7 @@ autoRefresh(CodeMirror)
 
 /** Register highlight */
 javascript(CodeMirror)
+jsx(CodeMirror)
 css(CodeMirror)
 xml(CodeMirror)
 html(CodeMirror)

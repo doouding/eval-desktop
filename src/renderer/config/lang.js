@@ -8,6 +8,10 @@ export default {
     babel: {
       name: 'Babel',
       mimeType: 'text/javascript'
+    },
+    jsx: {
+      name: 'Babel + JSX',
+      mimeType: 'text/jsx'
     }
   },
   html: {
