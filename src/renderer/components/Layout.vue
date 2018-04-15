@@ -70,7 +70,11 @@ export default {
           this.$refs.outputFrame.load(...result)
         })
         .catch((e) => {
-          console.log(e)
+          this.$msg.error({
+            message: `${e.type}: ${e.message}`,
+            duration: 5000,
+            showClose: true
+          })
         })
     }
   }

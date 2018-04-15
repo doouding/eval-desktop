@@ -117,7 +117,18 @@ export default {
           compiler[this.preprocessor](this.editor.getValue())
             .then(resolve)
             .catch((err) => {
-              reject(err)
+              let errorInfo = {
+                type: this.preprocessorList[this.preprocessor].name
+              }
+
+              switch (typeof err) {
+                case 'string':
+                  errorInfo.message = err
+                  break
+                default:
+                  errorInfo.message = err.message
+              }
+              reject(errorInfo)
             })
         }
       })
