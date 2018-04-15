@@ -13,6 +13,10 @@
     "@babel/types" "7.0.0-beta.35"
     lodash "^4.2.0"
 
+"@babel/standalone@^7.0.0-beta.44":
+  version "7.0.0-beta.44"
+  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.0.0-beta.44.tgz#5fed09f5263c11f9f79cba3883a6c72af47e5788"
+
 "@babel/types@7.0.0-beta.35":
   version "7.0.0-beta.35"
   resolved "http://registry.npm.taobao.org/@babel/types/download/@babel/types-7.0.0-beta.35.tgz#cf933a9a9a38484ca724b335b88d83726d5ab960"

@@ -4,6 +4,10 @@ export default {
       name: 'JavaScript',
       mimeType: 'text/javascript',
       nocompile: true
+    },
+    babel: {
+      name: 'Babel',
+      mimeType: 'text/javascript'
     }
   },
   html: {
