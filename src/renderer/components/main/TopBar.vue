@@ -15,7 +15,12 @@
           </span></el-button>
       </el-col>
       <el-col :span="8" class="nav-right">
-        <span>
+        <el-tooltip placement="bottom" content="点击添加外部资源">
+          <el-badge :value="resourceCount" class="badge-item">
+            <span class="external" @click="addResource">外部资源</span>
+          </el-badge>
+        </el-tooltip>
+        <span class="tools-btn">
           <el-button class="layout-action" type="text" :class="{ 'is-full': !isFullResult}" @click="switchFull">
             <span>
               <i class="eval-icon fullscreen"></i>
@@ -88,9 +93,10 @@
 </template>
 
 <script>
-import { user$$, signal$ } from '../../store/root'
-import * as user from '../../api/user.api'
-import Event from '../../util/event'
+import { user$$, signal$ } from '@/store/root'
+import { data as resourceList$ } from '@/store/resource'
+import * as user from '@/api/user.api'
+import Event from '@/util/event'
 
 export default {
   data () {
@@ -101,11 +107,16 @@ export default {
 
   subscriptions () {
     return {
-      user$$: user$$
+      user$$: user$$,
+      resourceCount: resourceList$.map(list => list.length)
     }
   },
 
   methods: {
+    addResource () {
+      Event.$emit('dialog', 'resourceDialog')
+    },
+
     switchFull () {
       this.isFullResult = !this.isFullResult
       this.$emit('fullresult', this.isFullResult)
@@ -146,10 +157,19 @@ export default {
 <style lang="sass" scoped>
 @import '~style-variable'
 
+.external
+  font-size: 12px
+  color: #777
+  padding-right: .5em
+  border-radius: 4px
+  line-height: 15px
+  display: inline-block
+  cursor: pointer
+
 .top-bar
   position: relative
   z-index: 6
-  padding: 5px 15px
+  padding: 5px 8px
   background-color: #fafafa
   /* Rectangle: */
   background: #FDFDFD;
@@ -182,4 +202,15 @@ export default {
   font-size: 13px
   position: relative
   bottom: 2px
+
+.tools-btn
+  margin-left: 1em
+</style>
+
+<style lang="sass">
+.badge-item
+  & > .el-badge__content.is-fixed
+    background-color: #666
+    font-size: 11px
+    cursor: default
 </style>

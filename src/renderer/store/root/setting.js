@@ -31,7 +31,7 @@ const settingInfo = user$
   .takeWhile(data => data.shouldUpdate || data.default)
   .switchMap((data) => {
     if (data.default) {
-      return Rx.Observable.from({ ...DEFAULT_SETTING })
+      return Rx.Observable.from([{ ...DEFAULT_SETTING }])
     } else {
       return Rx.Observable
         .fromPromise(setting.fetch())

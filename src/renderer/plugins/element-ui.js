@@ -19,7 +19,11 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
-  MessageBox
+  MessageBox,
+  Tooltip,
+  Autocomplete,
+  Tag,
+  Badge
 } from 'element-ui'
 
 export default function install (Vue) {
@@ -37,6 +41,10 @@ export default function install (Vue) {
   Vue.use(MenuItem)
   Vue.use(Select)
   Vue.use(Option)
+  Vue.use(Tooltip)
+  Vue.use(Autocomplete)
+  Vue.use(Tag)
+  Vue.use(Badge)
 
   Object.defineProperties(Vue.prototype, {
     '$msg': {
