@@ -23,7 +23,8 @@ import {
   Tooltip,
   Autocomplete,
   Tag,
-  Badge
+  Badge,
+  Alert
 } from 'element-ui'
 
 export default function install (Vue) {
@@ -45,6 +46,7 @@ export default function install (Vue) {
   Vue.use(Autocomplete)
   Vue.use(Tag)
   Vue.use(Badge)
+  Vue.use(Alert)
 
   Object.defineProperties(Vue.prototype, {
     '$msg': {

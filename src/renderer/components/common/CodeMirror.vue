@@ -11,6 +11,17 @@
       </el-dropdown>
     </div>
     <div class="editor-wrap"></div>
+    <transition name="slideup">  
+      <el-alert
+        class="compile-info"
+        v-if="errorMsg"
+        type="error"
+        title="编译错误"
+        :description="errorMsg"
+        :closable="false"
+      >
+      </el-alert>
+    </transition>
   </div>
 </template>
 
@@ -30,7 +41,8 @@ export default {
     return {
       editor: null,
       preprocessor: null,
-      indentation: 2
+      indentation: 2,
+      errorMsg: ''
     }
   },
 
@@ -115,7 +127,10 @@ export default {
           resolve(this.editor.getValue())
         } else {
           compiler[this.preprocessor](this.editor.getValue())
-            .then(resolve)
+            .then(() => {
+              this.errorMsg = ''
+              resolve()
+            })
             .catch((err) => {
               let errorInfo = {
                 type: this.preprocessorList[this.preprocessor].name
@@ -128,6 +143,7 @@ export default {
                 default:
                   errorInfo.message = err.message
               }
+              this.errorMsg = errorInfo.message
               reject(errorInfo)
             })
         }
@@ -176,6 +192,7 @@ export default {
 .codemirror-component
   height: 100%
   position: relative
+  overflow: hidden
 
 .editor-bar
   padding: .5em 1.2em
@@ -198,4 +215,21 @@ export default {
   width: 100%
   > .CodeMirror
     height: 100%
+
+.compile-info
+  z-index: 10
+  position: absolute
+  bottom: 0
+
+.slideup-enter
+  transform: translateY(100%)
+.slideup-enter-to
+  transform: translateY(0)
+.slideup-enter-active
+  transition: transform .3s ease-out
+.slideup-leave
+  transform: translateY(0)
+.slideup-leave-active
+  transform: translateY(100%)
+  transition: transform .3s ease-out
 </style>

@@ -1,6 +1,7 @@
 const Babel = require('@babel/standalone')
 
 export default {
+  javascript: babelCompiler,
   babel: babelCompiler,
   jsx: jsxCompiler
 }

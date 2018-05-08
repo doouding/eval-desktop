@@ -2,8 +2,7 @@ export default {
   javascript: {
     javascript: {
       name: 'JavaScript',
-      mimeType: 'text/javascript',
-      nocompile: true
+      mimeType: 'text/javascript'
     },
     babel: {
       name: 'Babel',
@@ -24,8 +23,7 @@ export default {
   css: {
     css: {
       name: 'CSS',
-      mimeType: 'text/css',
-      nocompile: true
+      mimeType: 'text/css'
     },
     sass: {
       name: 'Sass',

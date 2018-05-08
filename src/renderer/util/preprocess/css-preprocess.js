@@ -1,6 +1,7 @@
 import Sass from 'sass.js/dist/sass.js'
 
 export default {
+  'css': parseScss,
   'sass': parseSass,
   'scss': parseScss
 }
