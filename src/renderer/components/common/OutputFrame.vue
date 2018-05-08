@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import * as random from '../../util/random'
-
 export default {
   mounted () {
     this.iframe = document.createElement('iframe')
@@ -53,49 +51,22 @@ export default {
       this.iframe.contentDocument.close()
     },
 
-    sandbox (js) {
-      let sandbox = '__sandbox' + random.string(10)
-      let env = '__env' + random.string(10)
+    loadLibs (libs) {
+      let result = ''
 
-      return `
-      'use strict';
-      function ${sandbox} (win) {
-        var parent = undefined;
-        var top = undefined;
-        var frameElement = undefined;
-        var frames = undefined
-        var window = {};
-
-        var blackListWin = ['top', 'parent', 'frameElement', 'frames', 'window']
-
-        for (var item of blackListWin) {
-          if (item === 'frameElement') delete win[item]
-          if (item !== 'top' && item !== 'window') win[item] = undefined
-        }
-
-        for (var item in win) {
-          if (blackListWin.includes(item)) {
-            
-          }
-          window[item] = win[item]
-        }
-
-        Object.defineProperty(document, 'defaultView', { value: undefined })
-
-        function ${env} () {
-          ${js}
-        }
-
-        ${env}.call(window)
+      for (let lib of libs) {
+        /* eslint-disable */
+        result += `<script src='${lib.address}'><\/script>`
+        /* eslint-enable */
       }
-      ${sandbox}(window)
-      `
+
+      return result
     },
 
     /**
      * Intergrate code into page
      */
-    integrateHTML (html, js, css, libs) {
+    integrateHTML (html, js, css, libs = []) {
       /* eslint-disable */
 
       return `<DOCTYPE html>\
@@ -105,11 +76,12 @@ export default {
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
             <meta name="renderer" content="webkit">
             <meta name="force-rendering" content="webkit">
+            ${this.loadLibs(libs)}
             <style>${css}</style>
           </head>
           <body>
           ${html}
-          <script>${this.sandbox(js)}<\/script>
+          <script>${js}<\/script>
           </body>
         </html>`
       /* eslint-enable */

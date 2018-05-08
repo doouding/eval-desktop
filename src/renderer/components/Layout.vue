@@ -25,6 +25,7 @@ import EditorsLayout from './main/EditorsLayout'
 import TopBar from './main/Topbar'
 import CodeMirror from './common/CodeMirror'
 import OutputFrame from './common/OutputFrame'
+import { data as resourceList } from '@/store/resource'
 
 export default {
   components: {
@@ -67,6 +68,7 @@ export default {
 
       Promise.all([html, js, css])
         .then((result) => {
+          result.push(resourceList.value)
           this.$refs.outputFrame.load(...result)
         })
         .catch((e) => {
