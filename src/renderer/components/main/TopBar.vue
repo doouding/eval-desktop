@@ -131,7 +131,7 @@ export default {
     },
 
     run () {
-      this.$emit('run')
+      Event.$emit('run')
     },
 
     openSetting (command) {

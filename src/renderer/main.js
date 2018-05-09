@@ -4,14 +4,9 @@ import VueRx from 'vue-rx'
 import Rx from 'rxjs/Rx'
 import HotKey from '@/plugins/hot-key'
 import Element from '@/plugins/element-ui'
-import AV from 'leancloud-storage'
-import config from './config'
-
-/** init LeanCloud SDK */
-AV.init({
-  appId: config.AppID,
-  appKey: config.AppKey
-})
+import hotKeyService from '@/services/hotkeys'
+import '@/services/leancloud'
+import { setting$$ } from '@/store/root'
 
 /* eslint-disable */
 const App = require('./App').default
@@ -31,6 +26,12 @@ Vue.use(HotKey)
 Vue.use(Element)
 
 Vue.use(VueRx, Rx)
+
+setting$$.subscribe((val) => {
+  if (val) {
+    hotKeyService(val.hotkey)
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

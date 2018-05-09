@@ -56,9 +56,9 @@
 </template>
 
 <script>
-import { setting$$, signal$ } from '../../store/root'
-import langs from '../../config/lang'
-import * as setting from '../../api/setting.api'
+import { setting$$, signal$ } from '@/store/root'
+import langs from '@/config/lang'
+import * as setting from '@/api/setting.api'
 
 export default {
   data () {

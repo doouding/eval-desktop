@@ -4,7 +4,7 @@
       <top-bar 
         @layout-change="layoutChange"
         @layout-reset="layoutReset"
-        @run="run">
+      >
       </top-bar>
     </div>
     <div class="main-wrapper">
@@ -22,6 +22,7 @@
 <script>
 import Modals from './Modals'
 import EditorsLayout from './main/EditorsLayout'
+import Event from '@/util/event'
 import TopBar from './main/Topbar'
 import CodeMirror from './common/CodeMirror'
 import OutputFrame from './common/OutputFrame'
@@ -39,6 +40,11 @@ export default {
     return {
       layout: 'bottom'
     }
+  },
+  created () {
+    Event.$on('run', () => {
+      this.run()
+    })
   },
   computed: {
     jsEditorSlot () {
@@ -68,6 +74,7 @@ export default {
 
       Promise.all([html, js, css])
         .then((result) => {
+          console.log(result)
           result.push(resourceList.value)
           this.$refs.outputFrame.load(...result)
         })

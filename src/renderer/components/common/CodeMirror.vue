@@ -98,6 +98,7 @@ export default {
 
     initEditor () {
       let options
+      let indentationSpace = ' '.repeat(this.indentation)
 
       if (!sessionStorage.getItem(`codemirror-${this.langType}`)) {
         options = {}
@@ -116,6 +117,12 @@ export default {
           'Tab': 'emmetExpandAbbreviation',
           'Enter': 'emmetInsertLineBreak'
         }
+      } else {
+        options.codemirror.extraKeys = {
+          'Tab': function (cm) {
+            cm.replaceSelection(indentationSpace, 'end')
+          }
+        }
       }
 
       this.editor = CodeMirror(this.$el.querySelector('.editor-wrap'), options.codemirror)
@@ -127,9 +134,9 @@ export default {
           resolve(this.editor.getValue())
         } else {
           compiler[this.preprocessor](this.editor.getValue())
-            .then(() => {
+            .then((val) => {
               this.errorMsg = ''
-              resolve()
+              resolve(val || '')
             })
             .catch((err) => {
               let errorInfo = {
