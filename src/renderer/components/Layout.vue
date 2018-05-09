@@ -74,7 +74,6 @@ export default {
 
       Promise.all([html, js, css])
         .then((result) => {
-          console.log(result)
           result.push(resourceList.value)
           this.$refs.outputFrame.load(...result)
         })

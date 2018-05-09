@@ -45,32 +45,57 @@
             </el-form-item>
           </el-form>
         </div>
-        <div></div>
+        <div v-if="index === '2'" class="setting-panel">
+          <el-form size="small" label-width="100px">
+            <el-form-item label="运行">
+              <el-input v-model="setting.hotkey.run" type="text" data-key="run" readonly class="setting-input-width hotkey"></el-input>
+            </el-form-item>
+            <el-form-item label="上传">
+              <el-input v-model="setting.hotkey.upload" type="text" data-key="upload" readonly class="setting-input-width hotkey"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
       </el-col>
     </el-row>
     <div slot="footer">
       <el-button type="primary" size="medium" @click="saveSetting" :loading="saving">{{ saving ? '保存中' : '确定' }}</el-button>
-      <el-button @click="dialogVisible = false">关闭</el-button>
+      <el-button @click="close">关闭</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import hotkeys from 'hotkeys-js'
 import { setting$$, signal$ } from '@/store/root'
 import langs from '@/config/lang'
 import * as setting from '@/api/setting.api'
+import isPressed from '@/util/keypress'
+import _ from 'lodash'
 
 export default {
   data () {
     return {
       dialogVisible: false,
       index: '1',
-      saving: false
+      saving: false,
+
+      hotkeyInited: false
+    }
+  },
+
+  watch: {
+    dialogVisible (newVal) {
+      if (newVal && !this.hotkeyInited) {
+        this.initHotkeys()
+        this.hotkeyInited = true
+      } else {
+        this.$emit('switch', newVal)
+      }
     }
   },
 
   subscriptions: {
-    setting: setting$$
+    setting: setting$$.map((setting) => { return _.cloneDeep(setting) })
   },
 
   computed: {
@@ -80,11 +105,61 @@ export default {
   },
 
   methods: {
+    initHotkeys () {
+      const SETTING_SCOPE = 'setting'
+      const LAST_SCOPE = hotkeys.getScope()
+      const alphabet = 'abcdefghijklmnopqrstuvwxzy'.split('')
+      const controlKeysMap = ['command', 'ctrl', 'alt', 'shift']
+
+      hotkeys('*', SETTING_SCOPE, (e) => {
+        const el = e.target.parentElement
+        const keyName = el.dataset.key
+
+        if (el && el.classList.contains('hotkey')) {
+          let shortcuts = ''
+
+          for (let control of controlKeysMap) {
+            if (hotkeys[control]) {
+              shortcuts += `${control}+`
+            }
+          }
+
+          shortcuts = shortcuts || 'ctrl+'
+
+          let usedLetter = false
+          for (let letter of alphabet) {
+            if (isPressed(e, letter)) {
+              shortcuts += letter
+              usedLetter = true
+              break
+            }
+          }
+
+          if (usedLetter) {
+            this.setting.hotkey[keyName] = shortcuts
+          }
+        }
+      })
+      hotkeys.setScope(SETTING_SCOPE)
+
+      this.$on('switch', (inSettingPanel) => {
+        if (inSettingPanel) {
+          hotkeys.setScope(SETTING_SCOPE)
+        } else {
+          hotkeys.setScope(LAST_SCOPE)
+        }
+      })
+    },
     show () {
       this.dialogVisible = true
     },
     handleClose (done) {
+      this.setting = _.cloneDeep(setting$$.value)
       done()
+    },
+    close () {
+      this.setting = _.cloneDeep(setting$$.value)
+      this.dialogVisible = false
     },
     handleSelect (index) {
       this.index = index
@@ -119,6 +194,10 @@ export default {
 
 .setting-panel
   padding: 28px 30px 25px 25px
+  
 .setting-input-width > .el-input__inner
   width: 193px
+
+.setting-input-width.hotkey > .el-input__inner
+  user-select: none
 </style>

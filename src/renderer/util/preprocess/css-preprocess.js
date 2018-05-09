@@ -9,7 +9,6 @@ Sass.setWorkerUrl('/static/sass.worker.js')
 const sassCompiler = new Sass()
 function parseSass (code) {
   return new Promise((resolve, reject) => {
-    console.log('sass')
     sassCompiler.compile(code, { indentedSyntax: true }, (result) => {
       if (result.status === 1) {
         reject(result.formatted)
