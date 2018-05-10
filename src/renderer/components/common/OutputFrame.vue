@@ -34,6 +34,20 @@ export default {
     window.addEventListener('mouseup', () => {
       this.cover = false
     }, false)
+
+    /**
+     * Add iframe error notification
+     */
+    window.addEventListener('message', (e) => {
+      if (e.data.msg) {
+        this.$notify.error({
+          title: '运行错误',
+          message: e.data.msg,
+          position: 'bottom-right',
+          duration: 0
+        })
+      }
+    }, false)
   },
 
   data () {
@@ -81,6 +95,16 @@ export default {
           </head>
           <body>
           ${html}
+          <script>
+          (function(){
+            var parent = window.parent;
+            window.addEventListener('error', function(e){
+              parent.postMessage({
+                msg:e.message
+              }, '*');
+            }, false);
+          }());
+          <\/script>
           <script>${js}<\/script>
           </body>
         </html>`
