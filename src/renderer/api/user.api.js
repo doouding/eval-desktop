@@ -10,7 +10,6 @@ let currentUser = null
 export function current () {
   currentUser = User.current()
 
-  window.User = User
   if (currentUser === null) {
     return Promise.resolve({ authenticated: false })
   } else {

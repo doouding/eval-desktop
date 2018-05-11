@@ -24,7 +24,9 @@ import {
   Autocomplete,
   Tag,
   Badge,
-  Alert
+  Alert,
+  Card,
+  Pagination
 } from 'element-ui'
 
 export default function install (Vue) {
@@ -47,6 +49,8 @@ export default function install (Vue) {
   Vue.use(Tag)
   Vue.use(Badge)
   Vue.use(Alert)
+  Vue.use(Card)
+  Vue.use(Pagination)
 
   Object.defineProperties(Vue.prototype, {
     '$msg': {
@@ -57,6 +61,9 @@ export default function install (Vue) {
     },
     '$confirm': {
       value: MessageBox.confirm
+    },
+    '$prompt': {
+      value: MessageBox.prompt
     }
   })
 }

@@ -24,6 +24,13 @@ function del (index) {
   })
 }
 
+function fetch (list) {
+  pack({
+    type: 'fetch',
+    list
+  })
+}
+
 function pack (data) {
   crudSignal$.next({
     ...data
@@ -36,6 +43,9 @@ const resourceObserver = Rx.Observable.empty()
   .merge(crudSignal$)
   .map((data) => {
     switch (data.type) {
+      case 'fetch':
+        resourceList = data.list
+        break
       case 'add':
         resourceList.push({
           name: data.name,
@@ -63,5 +73,6 @@ export {
   cache as data,
   add,
   sort,
-  del
+  del,
+  fetch
 }

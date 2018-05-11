@@ -23,6 +23,7 @@
 import Modals from './Modals'
 import EditorsLayout from './main/EditorsLayout'
 import Event from '@/util/event'
+import * as uploadService from '@/services/upload'
 import TopBar from './main/Topbar'
 import CodeMirror from './common/CodeMirror'
 import OutputFrame from './common/OutputFrame'
@@ -44,6 +45,9 @@ export default {
   created () {
     Event.$on('run', () => {
       this.run()
+    })
+    Event.$on('upload', () => {
+      this.upload()
     })
   },
   computed: {
@@ -67,17 +71,68 @@ export default {
     layoutReset () {
       this.$refs.editorLayout.resetLayout()
     },
-    run () {
+    mergeSnippet () {
       let js = this.$refs.jsEditor.compile()
       let css = this.$refs.cssEditor.compile()
       let html = this.$refs.htmlEditor.compile()
 
-      Promise.all([html, js, css])
+      return Promise.all([html, js, css])
         .then((result) => {
           result.push(resourceList.value)
-          this.$refs.outputFrame.load(...result)
+          return result
         })
         .catch(() => {})
+    },
+    async upload () {
+      let currentSnippet = uploadService.current()
+      let snippetName
+
+      if (!currentSnippet) {
+        try {
+          snippetName = (await this.promptSnippetName()).value
+        } catch (_) {
+          this.$msg.warning('用户取消上传')
+          return
+        }
+        currentSnippet = uploadService.create()
+      }
+
+      let data = {
+        html_code: this.$refs.htmlEditor.editor.getValue(),
+        js_code: this.$refs.jsEditor.editor.getValue(),
+        css_code: this.$refs.cssEditor.editor.getValue(),
+        external_list: resourceList.value,
+        js_pre: this.$refs.jsEditor.preprocessor,
+        css_pre: this.$refs.cssEditor.preprocessor
+      }
+
+      if (snippetName) {
+        data.name = snippetName
+      }
+
+      currentSnippet.set(data)
+
+      currentSnippet.save()
+        .then(() => {
+          this.$msg.success('上传成功')
+        })
+        .catch(() => {
+          this.$msg.error('上传失败')
+        })
+    },
+    run () {
+      this.mergeSnippet()
+        .then((result) => {
+          this.$refs.outputFrame.load(...result)
+        })
+    },
+    promptSnippetName () {
+      return this.$prompt('为代码取个名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^.{2,10}$/,
+        inputErrorMessage: '名称长度应该大于2个字符小于10个字符'
+      })
     }
   }
 }

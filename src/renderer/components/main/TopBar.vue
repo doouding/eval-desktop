@@ -8,11 +8,18 @@
             运行
           </span>
         </el-button>
-        <el-button type="primary" size="small" plain>
+        <el-button type="primary" size="small" @click="upload" plain>
           <span>
             <i class="eval-icon upload left"></i>
             上传
-          </span></el-button>
+          </span>
+        </el-button>
+        <el-button type="primary" size="small" @click="newSnippet" plain>
+          <span>
+            <i class="eval-icon new left"></i>
+            新建
+          </span>
+        </el-button>
       </el-col>
       <el-col :span="8" class="nav-right">
         <el-tooltip placement="bottom" content="点击添加外部资源">
@@ -94,7 +101,8 @@
 
 <script>
 import { user$$, signal$ } from '@/store/root'
-import { data as resourceList$ } from '@/store/resource'
+import { data as resourceList$, fetch } from '@/store/resource'
+import * as uploadService from '@/services/upload'
 import * as user from '@/api/user.api'
 import Event from '@/util/event'
 
@@ -113,6 +121,20 @@ export default {
   },
 
   methods: {
+    newSnippet () {
+      Event.$emit('snippet-javascript', {
+        code: ''
+      })
+      Event.$emit('snippet-css', {
+        code: ''
+      })
+      Event.$emit('snippet-html', {
+        code: ''
+      })
+      fetch([])
+      uploadService.destroy()
+    },
+
     addResource () {
       Event.$emit('dialog', 'resourceDialog')
     },
@@ -132,6 +154,10 @@ export default {
 
     run () {
       Event.$emit('run')
+    },
+
+    upload () {
+      Event.$emit('upload')
     },
 
     openSetting (command) {

@@ -30,6 +30,7 @@
  * @fileoverview Editor component is responsible for writing code, compile code and syntax error prompt
  */
 import CodeMirror from '@/util/codemirror'
+import Event from '@/util/event'
 import langPreprocessor from '../../config/lang'
 import compiler from '@/util/preprocess'
 import { setting$$ } from '../../store/root'
@@ -44,6 +45,23 @@ export default {
       indentation: 2,
       errorMsg: ''
     }
+  },
+
+  created () {
+    const eventName = `snippet-${this.langType}`
+
+    const setSnippet = (data) => {
+      this.editor.setValue(data.code)
+      if (data.pre) {
+        this.preprocessor = data.pre
+      }
+    }
+
+    Event.$on(eventName, setSnippet)
+
+    this.$on('destroy', () => {
+      Event.$off(eventName, setSnippet)
+    })
   },
 
   props: {
@@ -189,6 +207,7 @@ export default {
   },
 
   beforeDestroy () {
+    this.$emit('destroy')
     this.saveTempData()
     this.unsubIndentationChange()
   }

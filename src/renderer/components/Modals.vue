@@ -4,6 +4,7 @@
     <register-dialog ref="registerDialog"></register-dialog>
     <setting-dialog ref="settingDialog"></setting-dialog>
     <resource-dialog ref="resourceDialog"></resource-dialog>
+    <snippets-list-dialog ref="codeRepoDialog"></snippets-list-dialog>
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import loginDialog from './modals/LoginDialog'
 import registerDialog from './modals/RegisterDialog'
 import settingDialog from './modals/SettingDialog'
 import resourceDialog from './modals/ResourceDialog'
+import snippetsListDialog from './modals/SnippetsListDialog'
 import Event from '../util/event'
 
 export default {
@@ -25,7 +27,8 @@ export default {
     loginDialog,
     registerDialog,
     settingDialog,
-    resourceDialog
+    resourceDialog,
+    snippetsListDialog
   }
 }
 </script>
