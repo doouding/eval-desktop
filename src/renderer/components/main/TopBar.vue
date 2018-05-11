@@ -11,7 +11,7 @@
         <el-button type="primary" size="small" @click="upload" plain>
           <span>
             <i class="eval-icon upload left"></i>
-            上传
+            保存
           </span>
         </el-button>
         <el-button type="primary" size="small" @click="newSnippet" plain>

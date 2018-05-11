@@ -50,7 +50,7 @@
             <el-form-item label="运行">
               <el-input v-model="setting.hotkey.run" type="text" data-key="run" readonly class="setting-input-width hotkey"></el-input>
             </el-form-item>
-            <el-form-item label="上传">
+            <el-form-item label="保存">
               <el-input v-model="setting.hotkey.upload" type="text" data-key="upload" readonly class="setting-input-width hotkey"></el-input>
             </el-form-item>
           </el-form>

@@ -91,7 +91,7 @@ export default {
         try {
           snippetName = (await this.promptSnippetName()).value
         } catch (_) {
-          this.$msg.warning('用户取消上传')
+          this.$msg.warning('用户取消保存')
           return
         }
         currentSnippet = uploadService.create()
@@ -114,10 +114,10 @@ export default {
 
       currentSnippet.save()
         .then(() => {
-          this.$msg.success('上传成功')
+          this.$msg.success('保存成功')
         })
         .catch(() => {
-          this.$msg.error('上传失败')
+          this.$msg.error('保存失败')
         })
     },
     run () {
