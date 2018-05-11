@@ -23,6 +23,11 @@
         <time class="time">{{ formatDate(snippet.get('createdAt')) }}</time>
         <el-tag size="mini">{{snippet.get('js_pre')}}</el-tag>
         <el-tag size="mini" type="success">{{snippet.get('css_pre')}}</el-tag>
+        <el-button class="del" type="text" size="mini" @click="del(snippet)">
+          <span>
+            <i class="eval-icon del"></i>
+          </span>
+        </el-button>
       </div>
     </el-card>
     <el-pagination
@@ -81,6 +86,22 @@ export default {
     show () {
       this.dialogVisible = true
     },
+    async del (snippet) {
+      if (uploadService.current()) {
+        if (uploadService.current().snippet.get('id') === snippet.get('id')) {
+          uploadService.destroy()
+        }
+      }
+
+      try {
+        await this.deleteConfirm();
+        (new Snippet(snippet))
+          .delete()
+          .then(() => {
+            this.$msg.success('删除成功')
+          })
+      } catch (_) {}
+    },
     fetch (snippet) {
       let snippetModel = uploadService.fetch(snippet)
       snippetModel
@@ -98,6 +119,7 @@ export default {
             code: snippet.get('html_code')
           })
           fetch(snippet.get('external_list'))
+          this.dialogVisible = false
         })
     },
     formatDate (date) {
@@ -110,6 +132,13 @@ export default {
         .then((list) => {
           this.snippetList = list
         })
+    },
+    deleteConfirm () {
+      return this.$confirm('删除该代码操作不可逆，是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     }
   }
 }
@@ -138,5 +167,8 @@ export default {
     font-size: 12px
     color: #999
     margin-right: 2em
+  .del
+    float: right
+    color: #666
 
 </style>
