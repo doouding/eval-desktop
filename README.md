@@ -1,7 +1,7 @@
 <h1 align="center">Eval.js</h1>
 <div align="center">A desktop app like jsfiddle runs offline</div>
 <p align="center">
-  <img width="" src="https://github.com/codertx/eval-desktop/raw/master/demo.png">
+  <img width="" src="https://github.com/codertx/eval-desktop/raw/master/demo.mp4">
 </p>
 
 #### Todo Features
