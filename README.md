@@ -1,6 +1,7 @@
 <h1 align="center">Eval.js</h1>
 <p align="center">
   <img
+   width="800"
    src="https://github.com/codertx/eval-desktop/raw/master/demo.gif"/>
 </p>
 
