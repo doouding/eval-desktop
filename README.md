@@ -9,9 +9,9 @@
 - [x] CSS preprocessor support: Sass
 - [x] Emmet support for HTML
 - [x] Layout change
-- [ ] Babel support for JavaScript
+- [x] Babel support for JavaScript
 - [ ] Common boilerplate support
-- [ ] Hotkey support
+- [x] Hotkey support
 - [ ] i18n
 
 #### Build Setup
