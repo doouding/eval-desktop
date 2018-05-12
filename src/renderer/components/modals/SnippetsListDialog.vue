@@ -6,37 +6,41 @@
     class="snippet-dialog"
     center
   >
-    <el-card
-      v-for="snippet in snippetList"
-      :body-style="{ padding: '15px 15px 5px' }"
-      class="snippet-item"
-      shadow="hover"
-      :key="snippet.id"
+    <div
+      v-loading="loading"
     >
-      <div
-        class="name"
-        @click="fetch(snippet)"
+      <el-card
+        v-for="snippet in snippetList"
+        :body-style="{ padding: '15px 15px 5px' }"
+        class="snippet-item"
+        shadow="hover"
+        :key="snippet.id"
       >
-        {{snippet.get('name')}}
-      </div>
-      <div class="meta">
-        <time class="time">{{ formatDate(snippet.get('createdAt')) }}</time>
-        <el-tag size="mini">{{snippet.get('js_pre')}}</el-tag>
-        <el-tag size="mini" type="success">{{snippet.get('css_pre')}}</el-tag>
-        <el-button class="del" type="text" size="mini" @click="del(snippet)">
-          <span>
-            <i class="eval-icon del"></i>
-          </span>
-        </el-button>
-      </div>
-    </el-card>
-    <el-pagination
-      class="snippet-page"
-      small
-      layout="prev, pager, next"
-      @current-change="pageSwitch"
-      :page-count="totalPage">
-    </el-pagination>
+        <div
+          class="name"
+          @click="fetch(snippet)"
+        >
+          {{snippet.get('name')}}
+        </div>
+        <div class="meta">
+          <time class="time">{{ formatDate(snippet.get('createdAt')) }}</time>
+          <el-tag size="mini">{{snippet.get('js_pre')}}</el-tag>
+          <el-tag size="mini" type="success">{{snippet.get('css_pre')}}</el-tag>
+          <el-button class="del" type="text" size="mini" @click="del(snippet)">
+            <span>
+              <i class="eval-icon del"></i>
+            </span>
+          </el-button>
+        </div>
+      </el-card>
+      <el-pagination
+        class="snippet-page"
+        small
+        layout="prev, pager, next"
+        @current-change="pageSwitch"
+        :page-count="totalPage">
+      </el-pagination>
+    </div>
   </el-dialog>
 </template>
 
@@ -62,13 +66,15 @@ export default {
       totalSnippet: 0,
       totalPage: 0,
       currentPage: 1,
-      pageSize: 5
+      pageSize: 5,
+      loading: true
     }
   },
 
   watch: {
     dialogVisible (newVal) {
       if (newVal) {
+        this.loading = true
         Promise
           .all([Snippet.list(this.currentPage, this.pageSize), Snippet.meta(this.pageSize)])
           .then((result) => {
@@ -77,6 +83,7 @@ export default {
             this.snippetList = list
             this.totalSnippet = meta[0]
             this.totalPage = meta[1]
+            this.loading = false
           })
       }
     }
@@ -104,6 +111,12 @@ export default {
     },
     fetch (snippet) {
       let snippetModel = uploadService.fetch(snippet)
+      let loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: '载入中',
+        background: 'rgba(255, 255, 255, 0.8)'
+      })
       snippetModel
         .get()
         .then((snippet) => {
@@ -120,6 +133,7 @@ export default {
           })
           fetch(snippet.get('external_list'))
           this.dialogVisible = false
+          loading.close()
         })
     },
     formatDate (date) {

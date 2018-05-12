@@ -52,6 +52,7 @@ export default function install (Vue) {
   Vue.use(Alert)
   Vue.use(Card)
   Vue.use(Pagination)
+  Vue.use(Loading.directive)
 
   Object.defineProperties(Vue.prototype, {
     '$msg': {
