@@ -26,7 +26,8 @@ import {
   Badge,
   Alert,
   Card,
-  Pagination
+  Pagination,
+  Loading
 } from 'element-ui'
 
 export default function install (Vue) {
@@ -64,6 +65,9 @@ export default function install (Vue) {
     },
     '$prompt': {
       value: MessageBox.prompt
+    },
+    '$loading': {
+      value: Loading.service
     }
   })
 }

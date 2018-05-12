@@ -43,12 +43,23 @@ export default {
     }
   },
   created () {
+    let loadedCount = 0
+    const editorLoad = () => {
+      loadedCount++
+      if (loadedCount === 3) {
+        Event.$off('editor-loaded', editorLoad)
+        loading.close()
+      }
+    }
+    const loading = this.loading()
+
     Event.$on('run', () => {
       this.run()
     })
     Event.$on('upload', () => {
       this.upload()
     })
+    Event.$on('editor-loaded', editorLoad)
   },
   computed: {
     jsEditorSlot () {
@@ -65,6 +76,14 @@ export default {
     }
   },
   methods: {
+    loading () {
+      return this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: '加载中',
+        background: 'rgba(255, 255, 255, 0.5)'
+      })
+    },
     layoutChange (layout) {
       this.layout = layout
     },

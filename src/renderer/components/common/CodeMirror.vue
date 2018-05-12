@@ -88,8 +88,9 @@ export default {
         this.indentation = setting.indentation
 
         this.initEditor()
+        Event.$emit('editor-loaded')
 
-        // when the listener was calling synchronously
+        // listener is calling synchronously so
         // the subscription is still undefined
         setTimeout(() => {
           subscription.unsubscribe()
