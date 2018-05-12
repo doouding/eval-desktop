@@ -133,6 +133,7 @@ export default {
       })
       fetch([])
       uploadService.destroy()
+      Event.$emit('run')
     },
 
     addResource () {
