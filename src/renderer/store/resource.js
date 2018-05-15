@@ -39,7 +39,6 @@ function pack (data) {
 
 let resourceList = []
 const resourceObserver = Rx.Observable.empty()
-  .startWith([])
   .merge(crudSignal$)
   .map((data) => {
     switch (data.type) {
@@ -65,7 +64,7 @@ const resourceObserver = Rx.Observable.empty()
     return JSON.parse(JSON.stringify(resourceList))
   })
 
-const cache = new Rx.BehaviorSubject()
+const cache = new Rx.BehaviorSubject([])
 
 resourceObserver.subscribe(cache)
 
