@@ -2,19 +2,19 @@
   <div class="top-bar">
     <el-row type="flex" justify="space-between" align="middle">
       <el-col :span="8" class="nav-left">
-        <el-button type="primary" size="small" @click="run">
+        <el-button type="text" size="medium" @click="run">
           <span>
             <i class="eval-icon play left"></i>
             运行
           </span>
         </el-button>
-        <el-button type="primary" size="small" @click="upload" plain>
+        <el-button type="text" size="medium" @click="upload">
           <span>
             <i class="eval-icon upload left"></i>
             保存
           </span>
         </el-button>
-        <el-button type="primary" size="small" @click="newSnippet" plain>
+        <el-button type="text" size="medium" @click="newSnippet">
           <span>
             <i class="eval-icon new left"></i>
             新建
@@ -200,14 +200,23 @@ export default {
   background-color: #fafafa
   /* Rectangle: */
   background: #FDFDFD;
-  box-shadow: 0 1px 0 0 #EBEBEB, 0 0 8px 0 rgba(0,0,0,0.07);
+  box-shadow: 0 1px 0 0 #EBEBEB, 0 0 4px 0 rgba(0,0,0,0.03);
 
 .nav-left
   text-align: left
+  margin-left: 20px
+  .el-button
+    font-weight: 100
+    color: #666
+    &:hover
+      color: #409EFF
+  .el-button + .el-button
+      margin-left: 25px
 
 .nav-right
   text-align: right
   user-select: none
+  margin-right: 20px
 
 .is-full
   color: #666!important
