@@ -67,6 +67,9 @@ export default function install (Vue) {
     '$prompt': {
       value: MessageBox.prompt
     },
+    '$alert': {
+      value: MessageBox.alert
+    },
     '$loading': {
       value: Loading.service
     }

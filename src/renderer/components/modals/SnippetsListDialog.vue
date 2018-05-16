@@ -9,6 +9,9 @@
     <div
       v-loading="loading"
     >
+      <div class="empty-text" v-if="snippetList.length === 0">
+        当前没有代码哦，快去创建一个吧
+      </div>
       <el-card
         v-for="snippet in snippetList"
         :body-style="{ padding: '15px 15px 5px' }"
@@ -45,8 +48,6 @@
 </template>
 
 <script>
-import Snippet from '@/api/snippet.api'
-import * as uploadService from '@/services/upload'
 import Event from '@/util/event'
 import { fetch } from '@/store/resource'
 
@@ -74,17 +75,7 @@ export default {
   watch: {
     dialogVisible (newVal) {
       if (newVal) {
-        this.loading = true
-        Promise
-          .all([Snippet.list(this.currentPage, this.pageSize), Snippet.meta(this.pageSize)])
-          .then((result) => {
-            let [list, meta] = result
-
-            this.snippetList = list
-            this.totalSnippet = meta[0]
-            this.totalPage = meta[1]
-            this.loading = false
-          })
+        this.list()
       }
     }
   },
@@ -93,32 +84,46 @@ export default {
     show () {
       this.dialogVisible = true
     },
+    list () {
+      this.loading = true
+      Promise
+        .all([this.$snippet.list(this.currentPage, this.pageSize), this.$snippet.meta(this.pageSize)])
+        .then((result) => {
+          let [list, meta] = result
+
+          this.snippetList = list
+          this.totalSnippet = meta[0]
+          this.totalPage = meta[1]
+          this.loading = false
+        })
+    },
     async del (snippet) {
-      if (uploadService.current()) {
-        if (uploadService.current().snippet.get('id') === snippet.get('id')) {
-          uploadService.destroy()
+      if (this.$snippet.snippet) {
+        if (this.$snippet.snippet.get('id') === snippet.get('id')) {
+          this.$snippet.destroy()
         }
       }
 
       try {
-        await this.deleteConfirm();
-        (new Snippet(snippet))
-          .delete()
+        await this.deleteConfirm()
+        this.$snippet
+          .delete(snippet)
           .then(() => {
             this.$msg.success('删除成功')
+            this.list()
           })
       } catch (_) {}
     },
     fetch (snippet) {
-      let snippetModel = uploadService.fetch(snippet)
       let loading = this.$loading({
         lock: true,
         fullscreen: true,
         text: '载入中',
         background: 'rgba(255, 255, 255, 0.8)'
       })
-      snippetModel
-        .get()
+      this.$snippet.createWithInstance(snippet)
+      this.$snippet
+        .fetch()
         .then((snippet) => {
           Event.$emit('snippet-javascript', {
             code: snippet.get('js_code'),
@@ -142,7 +147,7 @@ export default {
     },
     pageSwitch (page) {
       this.currentPage = page
-      Snippet.list(this.currentPage, this.pageSize)
+      this.snippet.list(this.currentPage, this.pageSize)
         .then((list) => {
           this.snippetList = list
         })
@@ -162,6 +167,9 @@ export default {
 .snippet-dialog
   .el-dialog__body
     padding: 10px 25px
+  .empty-text
+    text-align: center
+    line-height: 3em
 
 .snippet-page
   margin-top: 10px
@@ -184,5 +192,4 @@ export default {
   .del
     float: right
     color: #666
-
 </style>

@@ -23,7 +23,6 @@
 import Modals from './Modals'
 import EditorsLayout from './main/EditorsLayout'
 import Event from '@/util/event'
-import * as uploadService from '@/services/upload'
 import TopBar from './main/Topbar'
 import CodeMirror from './common/CodeMirror'
 import OutputFrame from './common/OutputFrame'
@@ -60,8 +59,8 @@ export default {
     Event.$on('run', () => {
       this.run()
     })
-    Event.$on('upload', () => {
-      this.upload()
+    Event.$on('upload', (name = '') => {
+      this.upload(name)
     })
     Event.$on('editor-loaded', editorLoad)
   },
@@ -106,8 +105,9 @@ export default {
         })
         .catch(() => {})
     },
-    async upload () {
-      console.log(this.user)
+    async upload (name) {
+      let isFork = name !== ''
+
       if (!this.user.authenticated) {
         Event.$emit('dialog', 'loginDialog')
         setTimeout(() => {
@@ -116,17 +116,17 @@ export default {
         return
       }
 
-      let currentSnippet = uploadService.current()
-      let snippetName
-
-      if (!currentSnippet) {
+      if (isFork) {
+        this.$snippet.destroy()
+        this.$snippet.create()
+      } else if (!this.$snippet.hasInstance() && !name) {
         try {
-          snippetName = (await this.promptSnippetName()).value
+          name = (await this.promptSnippetName()).value
         } catch (_) {
           this.$msg.warning('用户取消保存')
           return
         }
-        currentSnippet = uploadService.create()
+        this.$snippet.create()
       }
 
       let data = {
@@ -138,13 +138,13 @@ export default {
         css_pre: this.$refs.cssEditor.preprocessor
       }
 
-      if (snippetName) {
-        data.name = snippetName
+      if (name) {
+        data.name = name
       }
 
-      currentSnippet.set(data)
+      this.$snippet.set(data)
 
-      currentSnippet.save()
+      this.$snippet.save()
         .then(() => {
           this.$msg.success('保存成功')
         })
@@ -162,8 +162,8 @@ export default {
       return this.$prompt('为代码取个名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /^.{2,10}$/,
-        inputErrorMessage: '名称长度应该大于2个字符小于10个字符'
+        inputPattern: /^.{2,20}$/,
+        inputErrorMessage: '名称长度应该大于2个字符小于20个字符'
       })
     }
   }

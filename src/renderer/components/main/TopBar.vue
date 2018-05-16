@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <el-row type="flex" justify="space-between" align="middle">
-      <el-col :span="8" class="nav-left">
+      <el-col :span="12" class="nav-left">
         <el-button type="text" size="medium" @click="run">
           <span>
             <i class="eval-icon play left"></i>
@@ -20,6 +20,29 @@
             新建
           </span>
         </el-button>
+        <span class="separator">|</span>
+        <el-button type="text" size="medium" @click="shareCode" 
+          v-if="$snippet.snippet && $snippet.snippet.id && $snippet.snippet.get('owner').id === user$$.objectId"
+        >
+          <span>
+            <i class="eval-icon share left"></i>
+            分享
+          </span>
+        </el-button>
+        <el-button type="text" size="medium" @click="loadCode">
+          <span>
+            <i class="eval-icon load left"></i>
+            加载
+          </span>
+        </el-button>
+        <el-button type="text" size="medium" @click="forkCode"
+          v-if="$snippet.snippet && $snippet.snippet.get('owner').id !== user$$.objectId"
+        >
+          <span>
+            <i class="eval-icon fork left"></i>
+            fork
+          </span>
+        </el-button>
       </el-col>
       <el-col :span="8" class="nav-right">
         <el-tooltip placement="bottom" content="点击添加外部资源">
@@ -35,7 +58,7 @@
           </el-button>
           <el-dropdown class="layout-action" @command="switchLayout" trigger="click">
             <span class="layout-dropdown-link">
-              <i class="eval-icon layout" style="font-size: 1.1em"></i>
+              <i class="eval-icon layout" style="top: .08em;font-size: 1.1em"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="normal">
@@ -62,7 +85,7 @@
           </el-dropdown>
           <el-button class="layout-action" type="text" @click="resetLayout">
             <span>
-              <i class="eval-icon reset" style="font-size: 1.3em"></i>
+              <i class="eval-icon reset" style="font-size: 1.3em;top:.09em"></i>
             </span>
           </el-button>
           <el-button class="layout-action" type="text" @click="showLoginDialog" v-if="!user$$.authenticated">
@@ -73,7 +96,8 @@
           </el-button>
           <el-dropdown class="layout-action" @command="openSetting" v-if="user$$.authenticated" trigger="click">
             <span class="layout-dropdown-link">
-              <i class="eval-icon setting" style="font-size: 1.1em"></i>
+              <i class="eval-icon setting" style="top: .05em;font-size: 1.1em"></i>
+              {{user$$.username}}
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="codeRepoDialog">
@@ -102,7 +126,6 @@
 <script>
 import { user$$, signal$ } from '@/store/root'
 import { data as resourceList$, fetch } from '@/store/resource'
-import * as uploadService from '@/services/upload'
 import * as user from '@/api/user.api'
 import Event from '@/util/event'
 
@@ -132,8 +155,57 @@ export default {
         code: ''
       })
       fetch([])
-      uploadService.destroy()
+      this.$snippet.destroy()
       Event.$emit('run')
+    },
+
+    shareCode () {
+      this.$alert(`分享ID为：${this.$snippet.snippet.id}`, '分享', {
+        confirmButtonText: '确定'
+      })
+    },
+
+    snippetIDPrompt () {
+      return this.$prompt('输入分享ID', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+    },
+
+    loadCode () {
+      let loading
+      this.snippetIDPrompt()
+        .then(({ value }) => {
+          loading = this.$loading({
+            lock: true,
+            fullscreen: true,
+            text: '载入中',
+            background: 'rgba(255, 255, 255, 0.8)'
+          })
+          this.$snippet.createWithId(value)
+          return this.$snippet.fetch()
+        })
+        .then((snippet) => {
+          Event.$emit('snippet-javascript', {
+            code: snippet.get('js_code'),
+            pre: snippet.get('js_pre')
+          })
+          Event.$emit('snippet-css', {
+            code: snippet.get('css_code'),
+            pre: snippet.get('css_pre')
+          })
+          Event.$emit('snippet-html', {
+            code: snippet.get('html_code')
+          })
+          fetch(snippet.get('external_list'))
+          this.dialogVisible = false
+          window.debug = this.$snippet
+          loading.close()
+        })
+    },
+
+    forkCode () {
+      Event.$emit('upload', `fork-${this.$snippet.snippet.get('name')}`)
     },
 
     addResource () {
@@ -210,8 +282,14 @@ export default {
     color: #666
     &:hover
       color: #409EFF
+
   .el-button + .el-button
       margin-left: 25px
+
+.separator
+  color: #BBB
+  margin: 0 15px
+  font-weight: 100
 
 .nav-right
   text-align: right
@@ -242,6 +320,10 @@ export default {
 
 .tools-btn
   margin-left: 1em
+
+.layout-action
+  .eval-icon
+    position: relative
 </style>
 
 <style lang="sass">

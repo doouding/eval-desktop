@@ -2,8 +2,8 @@ import '@/assets/styles/index.sass'
 import Vue from 'vue'
 import VueRx from 'vue-rx'
 import Rx from 'rxjs/Rx'
-import HotKey from '@/plugins/hot-key'
 import Element from '@/plugins/element-ui'
+import Snippet from '@/plugins/upload'
 import hotKeyService from '@/services/hotkeys'
 import '@/services/leancloud'
 import '@/services/runtime-error'
@@ -20,11 +20,10 @@ Vue.config.productionTip = false
 /* use element-ui */
 Vue.use(Element)
 
-/* use hot key plguins */
-Vue.use(HotKey)
-
 /* use element-ui */
 Vue.use(Element)
+
+Vue.use(Snippet)
 
 Vue.use(VueRx, Rx)
 
