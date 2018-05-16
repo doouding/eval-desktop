@@ -223,7 +223,7 @@ export default {
 
 .editor-bar
   padding: .5em 1.2em
-  background-color: #f7f7f7
+  background-color: #f5f5f5
   .el-dropdown-link
     font-family: 'Ubuntu'
     cursor: pointer

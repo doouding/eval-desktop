@@ -1,5 +1,6 @@
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/3024-day'
+import 'codemirror/theme/base16-light'
 import autoRefresh from './addon/autorefresh'
 import emmet from '@emmetio/codemirror-plugin'
 import CodeMirror from 'codemirror'
@@ -26,7 +27,7 @@ pug(CodeMirror)
 
 const baseConfig = {
   lineWrapping: true,
-  theme: '3024-day',
+  theme: 'base16-light',
   lineNumbers: true,
   autoRefresh: true
 }
