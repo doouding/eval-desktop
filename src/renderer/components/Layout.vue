@@ -107,7 +107,8 @@ export default {
         .catch(() => {})
     },
     async upload () {
-      if (!this.user.authentification) {
+      console.log(this.user)
+      if (!this.user.authenticated) {
         Event.$emit('dialog', 'loginDialog')
         setTimeout(() => {
           this.$msg.error('需要登陆账号才能保存')
