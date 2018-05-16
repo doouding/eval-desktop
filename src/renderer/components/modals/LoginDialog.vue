@@ -56,7 +56,9 @@ export default {
           this.dialogVisible = false
           signal$.next(['user'])
         })
-        .catch(this.$msg.error)
+        .catch((e) => {
+          this.$msg.error(e.message)
+        })
     }
   }
 }
