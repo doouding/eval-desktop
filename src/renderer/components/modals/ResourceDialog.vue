@@ -180,7 +180,7 @@ export default {
                 suggestions.push({
                   value: `${name} ${asset.version}`,
                   name: name,
-                  address: `http//cdnjs.cloudflare.com/ajax/libs/${name}/${asset.version}/${asset.files.filter(assetName => assetName === filename)}`,
+                  address: `http://cdnjs.cloudflare.com/ajax/libs/${name}/${asset.version}/${asset.files.filter(assetName => assetName === filename)}`,
                   version: asset.version
                 })
               })

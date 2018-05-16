@@ -45,10 +45,9 @@ export default {
 
   methods: {
     load (...args) {
-      this.iframe.contentWindow.location.reload()
-      this.iframe.contentDocument.open()
-      this.iframe.contentDocument.write(this.integrateHTML(...args))
-      this.iframe.contentDocument.close()
+      let src = `data:text/html;charset=UTF-8,${this.integrateHTML(...args)}`
+      console.log(src)
+      this.iframe.src = src
     },
 
     loadLibs (libs) {
@@ -69,7 +68,7 @@ export default {
     integrateHTML (html, js, css, libs = []) {
       /* eslint-disable */
 
-      return `<DOCTYPE html>\
+      return `<!DOCTYPE html>\
         <html>
           <head>
             <meta charset="utf-8">
