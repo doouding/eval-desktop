@@ -6,6 +6,7 @@ import HotKey from '@/plugins/hot-key'
 import Element from '@/plugins/element-ui'
 import hotKeyService from '@/services/hotkeys'
 import '@/services/leancloud'
+import '@/services/runtime-error'
 import { setting$$ } from '@/store/root'
 
 /* eslint-disable */
