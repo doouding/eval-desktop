@@ -207,6 +207,7 @@ export default {
 
 .nav-right
   text-align: right
+  user-select: none
 
 .is-full
   color: #666!important

@@ -34,20 +34,6 @@ export default {
     window.addEventListener('mouseup', () => {
       this.cover = false
     }, false)
-
-    /**
-     * Add iframe error notification
-     */
-    window.addEventListener('message', (e) => {
-      if (e.data.msg) {
-        this.$notify.error({
-          title: '运行错误',
-          message: e.data.msg,
-          position: 'bottom-right',
-          duration: 0
-        })
-      }
-    }, false)
   },
 
   data () {
@@ -116,7 +102,7 @@ export default {
 
 <style lang="sass" scoped>
 .iframe-wrapper
-  position: relative
+  position: relativen
 
 .iframe-alter
   width: 100%
@@ -132,4 +118,10 @@ export default {
   width: 100%
   height: 100%
 
+</style>
+
+<style lang="sass">
+.iframe-wrapper
+  .iframe
+    display: block
 </style>
