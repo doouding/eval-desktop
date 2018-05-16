@@ -45,9 +45,13 @@ export default {
 
   methods: {
     load (...args) {
-      let src = `data:text/html;charset=UTF-8,${this.integrateHTML(...args)}`
-      console.log(src)
-      this.iframe.src = src
+      let iframeWindow = this.iframe.contentWindow
+      let iframeDoc = iframeWindow.document
+
+      iframeWindow.location.reload()
+      iframeDoc.open()
+      iframeDoc.write(this.integrateHTML(...args))
+      iframeDoc.close()
     },
 
     loadLibs (libs) {
@@ -101,7 +105,7 @@ export default {
 
 <style lang="sass" scoped>
 .iframe-wrapper
-  position: relativen
+  position: relative
 
 .iframe-alter
   width: 100%
