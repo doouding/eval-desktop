@@ -28,6 +28,7 @@ import TopBar from './main/Topbar'
 import CodeMirror from './common/CodeMirror'
 import OutputFrame from './common/OutputFrame'
 import { data as resourceList } from '@/store/resource'
+import { user$$ } from '@/store/root'
 
 export default {
   components: {
@@ -41,6 +42,9 @@ export default {
     return {
       layout: 'bottom'
     }
+  },
+  subscriptions: {
+    user: user$$
   },
   created () {
     let loadedCount = 0
@@ -103,6 +107,14 @@ export default {
         .catch(() => {})
     },
     async upload () {
+      if (!this.user.authentification) {
+        Event.$emit('dialog', 'loginDialog')
+        setTimeout(() => {
+          this.$msg.error('需要登陆账号才能保存')
+        })
+        return
+      }
+
       let currentSnippet = uploadService.current()
       let snippetName
 
