@@ -5,6 +5,7 @@ node_js:
   - "8"
 
 before_install:
+  - cp src/renderer/config/index.example.js src/renderer/config/index.js
   - npm install yarn --global
   - yarn global add node-gyp
 
