@@ -5,7 +5,9 @@ export default {
   'sass': parseSass,
   'scss': parseScss
 }
-Sass.setWorkerUrl('/static/sass.worker.js')
+
+Sass.setWorkerUrl(`static/sass.worker.js`)
+
 const sassCompiler = new Sass()
 function parseSass (code) {
   return new Promise((resolve, reject) => {
