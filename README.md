@@ -7,11 +7,6 @@
     <img src="https://img.shields.io/travis/codertx/eval-desktop/master.svg?style=for-the-badge">
   </a>
 </p>
-<p align="center">
-  <img
-   width="800"
-   src="https://github.com/codertx/eval-desktop/raw/master/demo.gif"/>
-</p>
 
 #### Todo Features
 
