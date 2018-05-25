@@ -1,6 +1,6 @@
 {
   "name": "eval-desktop",
-  "productName": "eval-desktop",
+  "productName": "eval.js",
   "version": "0.0.0",
   "author": "codertx <codert.sn@gmail.com>",
   "description": "An desktop app jsfiddle runs offline",
