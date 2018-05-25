@@ -29,7 +29,9 @@
             分享
           </span>
         </el-button>
-        <el-button type="text" size="medium" @click="loadCode">
+        <el-button type="text" size="medium" @click="loadCode"
+          v-if="user$$.authenticated"
+        >
           <span>
             <i class="eval-icon load left"></i>
             加载
