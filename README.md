@@ -1,14 +1,17 @@
-<h1 align="center">
-  <span>Eval.js</span>
+<p align="center">
+  <img
+   width="256"
+   src="https://github.com/codertx/eval-desktop/blob/dev/logo.png?raw=true">
   <br />
-</h1>
+  <a href="https://travis-ci.org/codertx/eval-desktop">
+    <img src="https://img.shields.io/travis/codertx/eval-desktop/master.svg?style=for-the-badge">
+  </a>
+</p>
 <p align="center">
   <img
    width="800"
    src="https://github.com/codertx/eval-desktop/raw/master/demo.gif"/>
 </p>
-
-[![Build Status](https://img.shields.io/travis/codertx/eval-desktop/master.svg?style=flat-square)](https://travis-ci.org/codertx/eval-desktop)
 
 #### Todo Features
 
