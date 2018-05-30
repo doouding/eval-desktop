@@ -9,7 +9,10 @@
       v-model="resourceName"
       :fetch-suggestions="queryLibResource"
       @select="addResource"
-      placeholder="请输入库或框架的名称"
+      :select-when-unmatched="true"
+      :hide-loading="true"
+      :trigger-on-focus="false"
+      placeholder="搜索库的名称 | 直接输入资源链接"
     ></el-autocomplete>
     <div class="resource-list" ref="resourceList">
       <div class="resource-empty" v-if="!resourceList || resourceList.length === 0">
@@ -18,13 +21,13 @@
       <div class="resource-item" :class="{'holder': item.hover}" :key="item.name + item.version" v-for="(item, index) in resourceList">
         <span class="eval-icon drag" @mousedown="dragResource(index)"></span>
         <span class="name">{{item.name}}</span>
-        <el-tag>{{item.version}}</el-tag>
+        <el-tag v-if="item.version">{{item.version}}</el-tag>
         <span class="eval-icon del" @click="delResource(index)"></span>
       </div>
       <div class="resource-item drag" :style="{top:`${dragTop}px`}" v-if="dragElement">
         <span class="eval-icon drag"></span>
         <span class="name">{{dragElement.name}}</span>
-        <el-tag>{{dragElement.version}}</el-tag>
+        <el-tag v-if="dragElement.version">{{dragElement.version}}</el-tag>
         <span class="eval-icon del"></span>
       </div>
     </div>
@@ -54,8 +57,14 @@ export default {
       this.dialogVisible = true
     },
     addResource (item) {
-      this.resourceName = ''
-      add(item)
+      item = item.address
+        ? item
+        : this.getResourceFromURL(item)
+
+      if (item) {
+        this.resourceName = ''
+        add(item)
+      }
     },
     delResource (index) {
       del(index)
@@ -137,6 +146,13 @@ export default {
       }
     },
     queryLibResource (queryString, cb) {
+      queryString = this.resourceName
+
+      if (queryString === '' || /^https?/.exec(queryString)) {
+        cb([]) // eslint-disable-line
+        return
+      }
+
       let modeReg = /^([a-zA-Z.]+)\s(([\d]\.?)*)$/
       let regResult = modeReg.exec(queryString)
 
@@ -187,6 +203,18 @@ export default {
 
             cb(suggestions)
           })
+      }
+    },
+    getResourceFromURL (item) {
+      if (/^https?:\/\//.exec(item.value)) {
+        let name = /\/([^/\s]+)$/.exec(item.value)[1]
+        return {
+          value: name,
+          name,
+          address: this.resourceName
+        }
+      } else {
+        return null
       }
     }
   }
