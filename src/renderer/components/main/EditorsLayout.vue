@@ -81,6 +81,7 @@
 
 <script>
 import resize from '@/util/resize'
+import Event from '@/util/event'
 
 /**
  * layout has three type: columns, normal, result-bottom, result-right
@@ -502,6 +503,7 @@ export default {
     },
     resetLayout () {
       Object.assign(this.$data, this.$options.data())
+      Event.$emit('resize')
     }
   }
 }

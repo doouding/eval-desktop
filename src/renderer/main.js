@@ -7,6 +7,7 @@ import Snippet from '@/plugins/upload'
 import hotKeyService from '@/services/hotkeys'
 import '@/services/leancloud'
 import '@/services/runtime-error'
+import '@/services/resize'
 import { setting$$ } from '@/store/root'
 
 /* eslint-disable */

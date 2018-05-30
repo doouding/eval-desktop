@@ -1,6 +1,7 @@
 /**
  * @fileoverview Implemention of resize editor area
  */
+import Event from './event'
 
 /**
  * Get mouse position relative to given element
@@ -44,6 +45,7 @@ function move (el, moveCallback, upCallback) {
 
   let unregister = () => {
     upCallback()
+    Event.$emit('resize')
     el.removeEventListener('mousemove', moveHander, false)
     window.removeEventListener('mouseup', unregister, false)
   }
