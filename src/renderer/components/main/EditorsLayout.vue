@@ -1,5 +1,5 @@
 <template>
-  <div :class="[layout]" class="editor-layout" ref="main">
+  <div :class="[layout + '-layout']" class="editor-layout" ref="main">
     <template v-if="layout === 'normal'">
       <div ref="normalLeftArea" :style="normalGutter.left">
         <div class="editor-wrapper" :style="normalGutter.leftArea.top">
@@ -81,6 +81,7 @@
 
 <script>
 import resize from '@/util/resize'
+import Event from '@/util/event'
 
 /**
  * layout has three type: columns, normal, result-bottom, result-right
@@ -502,6 +503,7 @@ export default {
     },
     resetLayout () {
       Object.assign(this.$data, this.$options.data())
+      Event.$emit('resize')
     }
   }
 }
@@ -538,23 +540,23 @@ export default {
 .editor-layout
   height: 100%
 
-.bottom
+.bottom-layout
   > .top
     > div
       float: left
       height: 100%
 
-.right
+.right-layout
   > div
     float: left
     height: 100%
 
-.normal
+.normal-layout
   > div
     float: left
     height: 100%
 
-.columns
+.columns-layout
   > div
     float: left
     height: 100%

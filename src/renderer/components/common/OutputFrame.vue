@@ -5,41 +5,14 @@
 -->
 
 <template>
-  <div class="iframe-wrapper" style="width:100%; height:100%">
-    <div v-show="cover" class="iframe-alter"></div>
-  </div>
+  <iframe class="iframe" ref="iframe"></iframe>
 </template>
 
 <script>
 export default {
-  mounted () {
-    this.iframe = document.createElement('iframe')
-    this.iframe.name = 'output'
-    this.iframe.frameBorder = '0'
-    this.iframe.className = 'iframe'
-    this.iframe.width = '100%'
-    this.iframe.height = '100%'
-    this.iframe.sandbox = 'allow-forms allow-modals allow-pointer-lock allow-scripts allow-popups allow-same-origin'
-
-    this.$el.appendChild(this.iframe)
-
-    /**
-     * mousemove event listener not working on iframe element
-     * so we put a "cover element" to cover iframe so that
-     * mousemove event listener can run successfully
-     **/
-    window.addEventListener('mousedown', () => {
-      this.cover = true
-    }, false)
-    window.addEventListener('mouseup', () => {
-      this.cover = false
-    }, false)
-  },
-
-  data () {
-    return {
-      iframe: null,
-      cover: false
+  computed: {
+    iframe () {
+      return this.$refs['iframe']
     }
   },
 
@@ -104,27 +77,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.iframe-wrapper
-  position: relative
-
-.iframe-alter
-  width: 100%
-  height: 100%
-  position: absolute
-  top: 0
-  left: 0
-  bottom: 0
-  right: 0
-  background-color: rgba(0,0,0,0)
-
 .iframe
-  width: 100%
+  display: block
   height: 100%
-
-</style>
-
-<style lang="sass">
-.iframe-wrapper
-  .iframe
-    display: block
+  width: 100%
+  border: 0
 </style>

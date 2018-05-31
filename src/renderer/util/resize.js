@@ -1,6 +1,7 @@
 /**
  * @fileoverview Implemention of resize editor area
  */
+import Event from './event'
 
 /**
  * Get mouse position relative to given element
@@ -8,9 +9,7 @@
  * @param {MouseEvent} event event object, used to get cursor position
  * @return {Object} contain x,y
  */
-function mouse (el, event) {
-  let rect = el.getBoundingClientRect()
-
+function mouse (rect, event) {
   return {
     x: event.clientX - rect.left,
     y: event.clientY - rect.top
@@ -36,14 +35,17 @@ function size (el) {
  * @param {*} upCallback The mouseup event callback
  */
 function move (el, moveCallback, upCallback) {
-  let moveHander = (e) => {
-    let elSize = size(el)
-    let pos = mouse(el, e)
+  const elSize = size(el)
+  const elRect = el.getBoundingClientRect()
+
+  const moveHander = (e) => {
+    let pos = mouse(elRect, e)
     moveCallback(e, elSize, pos)
   }
 
   let unregister = () => {
     upCallback()
+    Event.$emit('resize')
     el.removeEventListener('mousemove', moveHander, false)
     window.removeEventListener('mouseup', unregister, false)
   }
